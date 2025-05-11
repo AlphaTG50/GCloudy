@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -28,3 +29,35 @@
     <script type="module" src="script.js"></script>
 </body>
 </html>
+=======
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GCloudy Login</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/png" href="assets/GCloudy.ico">
+</head>
+<body>
+    <div class="login-container">
+        <img src="assets/GCloudy.png" alt="GCloudy Logo" class="logo">
+
+        <form id="login-form">
+            <input type="email" id="login-email" placeholder="E-Mail" required autocomplete="username">
+            <input type="password" id="login-password" placeholder="Passwort" required autocomplete="current-password">
+            <button type="submit">Anmelden</button>
+        </form>
+
+        <div id="new-password-container" style="display: none; margin-top: 1rem;">
+            <input type="password" id="new-password" placeholder="Neues Passwort setzen" autocomplete="new-password">
+            <button id="set-password">Passwort setzen</button>
+        </div>
+
+        <div id="login-error"></div>
+    </div>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>
+>>>>>>> 3ce38014953f935f465c79157aa29daf27e2af0d
