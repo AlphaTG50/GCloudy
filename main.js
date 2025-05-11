@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
         'video-station': 'https://192.168.178.45/video',
         'vmm': 'https://192.168.178.45/vm',
     
-        // Cloud Dienste (immer QuickConnect + Aliasname)
+        // Cloud Dienste
         'dsm-cloud': 'https://quickconnect.to/guerkan/',
         'active-backup-cloud': 'https://quickconnect.to/guerkan/activebackup',
         'contacts-cloud': 'https://quickconnect.to/guerkan/contacts',
@@ -22,7 +22,9 @@ document.addEventListener('DOMContentLoaded', () => {
         'photos-cloud': 'https://quickconnect.to/guerkan/photo',
         'video-station-cloud': 'https://quickconnect.to/guerkan/video',
         'vmm-cloud': 'https://quickconnect.to/guerkan/vm',
-        'home-assistant': 'https://homeassistant.gcloudy.de/'
+        'home-assistant': 'https://homeassistant.gcloudy.de/',
+        'homebox': 'https://homebox.gcloudy.de/',
+        'portainer': 'https://portainer.gcloudy.de/'
     };
     
 
@@ -183,4 +185,4 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     // Beim Laden Favoriten sortieren
     ['local','cloud'].forEach(tab => updateFavorites(tab));
-}); 
+});
