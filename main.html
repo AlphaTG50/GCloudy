@@ -21,6 +21,10 @@
                 <button class="tab-btn active" data-tab="local">Lokale Dienste</button>
                 <button class="tab-btn" data-tab="cloud">Cloud Dienste</button>
             </div>
+            <div class="search-container">
+                <input type="text" id="service-search" placeholder="Dienste durchsuchen..." class="search-input">
+                <i class="fas fa-search search-icon"></i>
+            </div>
             <div class="tab-content active" id="tab-local">
                 <div class="services-grid">
                     <div class="service-card" data-service="dsm">
@@ -76,6 +80,12 @@
                         <img src="assets/vmm.png" alt="VMM Icon" class="service-icon">
                         <h3>VMM</h3>
                         <p>Virtuelle Maschinen einfach erstellen, verwalten und betreiben.</p>
+                    </div>
+                    <div class="service-card" data-service="home-assistant-local">
+                        <span class="favorite-star" title="Als Favorit markieren">☆</span>
+                        <img src="assets/homeassistant.png" alt="Home Assistant Icon" class="service-icon">
+                        <h3>Home Assistant</h3>
+                        <p>Dein Smart Home zentral steuern und automatisieren – lokal erreichbar.</p>
                     </div>
                 </div>
             </div>

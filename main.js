@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
         'photos': 'https://192.168.178.45/photo',
         'video-station': 'https://192.168.178.45/video',
         'vmm': 'https://192.168.178.45/vm',
+        'home-assistant-local': 'http://homeassistant.local:8123/',
     
         // Cloud Dienste
         'dsm-cloud': 'https://quickconnect.to/guerkan/',
@@ -51,31 +52,6 @@ document.addEventListener('DOMContentLoaded', () => {
             card.style.transform = 'translateY(0)';
         });
     });
-
-    // Status-Check für Services (optional)
-    async function checkServiceStatus(serviceId, url) {
-        try {
-            const response = await fetch(url, { method: 'HEAD' });
-            return response.ok;
-        } catch (error) {
-            return false;
-        }
-    }
-
-    // Funktion zum Aktualisieren des Service-Status
-    async function updateServiceStatus() {
-        for (const [serviceId, url] of Object.entries(serviceUrls)) {
-            const card = document.querySelector(`[data-service="${serviceId}"]`);
-            if (card) {
-                const isOnline = await checkServiceStatus(serviceId, url);
-                card.classList.toggle('offline', !isOnline);
-            }
-        }
-    }
-
-    // Status-Check alle 5 Minuten
-    setInterval(updateServiceStatus, 300000);
-    updateServiceStatus(); // Initialer Check
 
     // Toggle-Funktion für einklappbare Bereiche
     document.querySelectorAll('.toggle-btn').forEach(btn => {
@@ -185,4 +161,25 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     // Beim Laden Favoriten sortieren
     ['local','cloud'].forEach(tab => updateFavorites(tab));
+
+    // Suchfunktionalität
+    const searchInput = document.getElementById('service-search');
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const activeTab = document.querySelector('.tab-content.active');
+            const cards = activeTab.querySelectorAll('.service-card');
+
+            cards.forEach(card => {
+                const title = card.querySelector('h3').textContent.toLowerCase();
+                const description = card.querySelector('p').textContent.toLowerCase();
+                const matches = title.includes(searchTerm) || description.includes(searchTerm);
+                
+                card.style.display = matches ? 'block' : 'none';
+                if (matches) {
+                    card.style.animation = 'fadeInOnly 0.3s ease-out';
+                }
+            });
+        });
+    }
 });
