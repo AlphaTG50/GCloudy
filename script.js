@@ -147,3 +147,24 @@ document.getElementById('login-form').addEventListener('submit', async function(
         enableLoginButton();
     }
 })();
+
+// Dark Mode Logik
+function setDarkmode(active) {
+    document.body.classList.toggle('darkmode', active);
+    document.body.classList.toggle('lightmode', !active);
+    localStorage.setItem('gcloudy_darkmode', active ? '1' : '0');
+}
+
+// Dark Mode Status beim Laden wiederherstellen
+const savedDark = localStorage.getItem('gcloudy_darkmode');
+if (savedDark === '1') setDarkmode(true);
+else setDarkmode(false);
+
+// Logo als Dark Mode Toggle
+const logo = document.querySelector('.logo');
+if (logo) {
+    logo.style.cursor = 'pointer';
+    logo.addEventListener('click', () => {
+        setDarkmode(!document.body.classList.contains('darkmode'));
+    });
+}

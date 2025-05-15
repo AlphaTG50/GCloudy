@@ -6,7 +6,12 @@
     <title>GCloudy - Ihre Cloud-Dienste</title>
     <link rel="stylesheet" href="main.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="icon" type="image/png" href="assets/GCloudy.ico">
+    <link rel="icon" type="image/png" href="assets/icon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="assets/icon/favicon.svg" />
+    <link rel="shortcut icon" href="assets/icon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/icon/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="GCloudy" />
+<link rel="manifest" href="/site.webmanifest" />
 </head>
 <body>
     <div class="container">
@@ -17,152 +22,178 @@
         </header>
 
         <main>
-            <div class="tabs">
-                <button class="tab-btn active" data-tab="local">Lokale Dienste</button>
-                <button class="tab-btn" data-tab="cloud">Cloud Dienste</button>
-            </div>
             <div class="search-container">
                 <input type="text" id="service-search" placeholder="Dienste durchsuchen..." class="search-input">
                 <i class="fas fa-search search-icon"></i>
             </div>
-            <div class="tab-content active" id="tab-local">
-                <div class="services-grid">
-                    <div class="service-card" data-service="dsm">
-                        <span class="favorite-star" title="Als Favorit markieren">☆</span>
-                        <img src="assets/dsm.png" alt="DSM Icon" class="service-icon">
-                        <h3>DSM</h3>
-                        <p>Verwalte dein Synology NAS zentral und sicher mit dem DiskStation Manager.</p>
+            <div class="services-grid">
+                <div class="service-card" data-service="dsm">
+                    <span class="favorite-star" title="Als Favorit markieren">☆</span>
+                    <div class="service-toggle">
+                        <span class="toggle-label">Lokal</span>
+                        <label class="switch">
+                            <input type="checkbox" class="service-switch">
+                            <span class="slider round"></span>
+                        </label>
+                        <span class="toggle-label">Cloud</span>
                     </div>
-                    <div class="service-card" data-service="active-backup">
-                        <span class="favorite-star" title="Als Favorit markieren">☆</span>
-                        <img src="assets/activeimageforbackup.png" alt="Active Backup Icon" class="service-icon">
-                        <h3>Active Backup</h3>
-                        <p>Backup- und Wiederherstellungslösungen für deine gesamte IT-Infrastruktur.</p>
-                    </div>
-                    <div class="service-card" data-service="contacts">
-                        <span class="favorite-star" title="Als Favorit markieren">☆</span>
-                        <img src="assets/contacts.png" alt="Contacts Icon" class="service-icon">
-                        <h3>Contacts</h3>
-                        <p>Verwalte und synchronisiere deine Kontakte effizient auf allen Geräten.</p>
-                    </div>
-                    <div class="service-card" data-service="download-station">
-                        <span class="favorite-star" title="Als Favorit markieren">☆</span>
-                        <img src="assets/downloadstation.png" alt="Download Station Icon" class="service-icon">
-                        <h3>Download Station</h3>
-                        <p>Intelligentes Herunterladen und Verwalten von Dateien direkt auf dein NAS.</p>
-                    </div>
-                    <div class="service-card" data-service="file-station">
-                        <span class="favorite-star" title="Als Favorit markieren">☆</span>
-                        <img src="assets/filestation.png" alt="File Station Icon" class="service-icon">
-                        <h3>File Station</h3>
-                        <p>Einfacher Zugriff und Verwaltung deiner Dateien – jederzeit und überall.</p>
-                    </div>
-                    <div class="service-card" data-service="drive">
-                        <span class="favorite-star" title="Als Favorit markieren">☆</span>
-                        <img src="assets/drive.png" alt="Drive Icon" class="service-icon">
-                        <h3>Drive</h3>
-                        <p>Dein persönlicher Cloud-Speicher für Dateien, Zusammenarbeit und Synchronisation.</p>
-                    </div>
-                    <div class="service-card" data-service="photos">
-                        <span class="favorite-star" title="Als Favorit markieren">☆</span>
-                        <img src="assets/photos.png" alt="Photos Icon" class="service-icon">
-                        <h3>Photos</h3>
-                        <p>Organisiere, teile und sichere deine Fotos in einer modernen Galerie.</p>
-                    </div>
-                    <div class="service-card" data-service="video-station">
-                        <span class="favorite-star" title="Als Favorit markieren">☆</span>
-                        <img src="assets/videostation.png" alt="Video Station Icon" class="service-icon">
-                        <h3>Video Station</h3>
-                        <p>Streame und verwalte deine Videosammlung komfortabel auf allen Geräten.</p>
-                    </div>
-                    <div class="service-card" data-service="vmm">
-                        <span class="favorite-star" title="Als Favorit markieren">☆</span>
-                        <img src="assets/vmm.png" alt="VMM Icon" class="service-icon">
-                        <h3>VMM</h3>
-                        <p>Virtuelle Maschinen einfach erstellen, verwalten und betreiben.</p>
-                    </div>
-                    <div class="service-card" data-service="home-assistant-local">
-                        <span class="favorite-star" title="Als Favorit markieren">☆</span>
-                        <img src="assets/homeassistant.png" alt="Home Assistant Icon" class="service-icon">
-                        <h3>Home Assistant</h3>
-                        <p>Dein Smart Home zentral steuern und automatisieren – lokal erreichbar.</p>
-                    </div>
+                    <img src="assets/dsm.png" alt="DSM Icon" class="service-icon">
+                    <h3>DSM</h3>
+                    <p>Verwalte dein Synology NAS zentral und sicher.</p>
                 </div>
-            </div>
-            <div class="tab-content" id="tab-cloud">
-                <div class="services-grid">
-                    <div class="service-card" data-service="dsm-cloud">
-                        <span class="favorite-star" title="Als Favorit markieren">☆</span>
-                        <img src="assets/dsm.png" alt="DSM Cloud Icon" class="service-icon">
-                        <h3>DSM</h3>
-                        <p>Verwalte dein Synology NAS von überall über die Cloud.</p>
+                <div class="service-card" data-service="active-backup">
+                    <span class="favorite-star" title="Als Favorit markieren">☆</span>
+                    <div class="service-toggle">
+                        <span class="toggle-label">Lokal</span>
+                        <label class="switch">
+                            <input type="checkbox" class="service-switch">
+                            <span class="slider round"></span>
+                        </label>
+                        <span class="toggle-label">Cloud</span>
                     </div>
-                    <div class="service-card" data-service="active-backup-cloud">
-                        <span class="favorite-star" title="Als Favorit markieren">☆</span>
-                        <img src="assets/activeimageforbackup.png" alt="Active Backup Cloud Icon" class="service-icon">
-                        <h3>Active Backup</h3>
-                        <p>Cloud-Backup für maximale Sicherheit deiner Daten – jederzeit verfügbar.</p>
+                    <img src="assets/activeimageforbackup.png" alt="Active Backup Icon" class="service-icon">
+                    <h3>Active Backup</h3>
+                    <p>Backup- und Wiederherstellungslösungen für deine IT-Infrastruktur.</p>
+                </div>
+                <div class="service-card" data-service="contacts">
+                    <span class="favorite-star" title="Als Favorit markieren">☆</span>
+                    <div class="service-toggle">
+                        <span class="toggle-label">Lokal</span>
+                        <label class="switch">
+                            <input type="checkbox" class="service-switch">
+                            <span class="slider round"></span>
+                        </label>
+                        <span class="toggle-label">Cloud</span>
                     </div>
-                    <div class="service-card" data-service="contacts-cloud">
-                        <span class="favorite-star" title="Als Favorit markieren">☆</span>
-                        <img src="assets/contacts.png" alt="Contacts Cloud Icon" class="service-icon">
-                        <h3>Contacts</h3>
-                        <p>Synchronisiere und verwalte Kontakte sicher in der Cloud.</p>
+                    <img src="assets/contacts.png" alt="Contacts Icon" class="service-icon">
+                    <h3>Contacts</h3>
+                    <p>Verwalte und synchronisiere deine Kontakte auf allen Geräten.</p>
+                </div>
+                <div class="service-card" data-service="download-station">
+                    <span class="favorite-star" title="Als Favorit markieren">☆</span>
+                    <div class="service-toggle">
+                        <span class="toggle-label">Lokal</span>
+                        <label class="switch">
+                            <input type="checkbox" class="service-switch">
+                            <span class="slider round"></span>
+                        </label>
+                        <span class="toggle-label">Cloud</span>
                     </div>
-                    <div class="service-card" data-service="download-station-cloud">
-                        <span class="favorite-star" title="Als Favorit markieren">☆</span>
-                        <img src="assets/downloadstation.png" alt="Download Station Cloud Icon" class="service-icon">
-                        <h3>Download Station</h3>
-                        <p>Dateien bequem aus dem Internet direkt in deine Cloud laden.</p>
+                    <img src="assets/downloadstation.png" alt="Download Station Icon" class="service-icon">
+                    <h3>Download Station</h3>
+                    <p>Intelligentes Herunterladen und Verwalten von Dateien.</p>
+                </div>
+                <div class="service-card" data-service="file-station">
+                    <span class="favorite-star" title="Als Favorit markieren">☆</span>
+                    <div class="service-toggle">
+                        <span class="toggle-label">Lokal</span>
+                        <label class="switch">
+                            <input type="checkbox" class="service-switch">
+                            <span class="slider round"></span>
+                        </label>
+                        <span class="toggle-label">Cloud</span>
                     </div>
-                    <div class="service-card" data-service="file-station-cloud">
-                        <span class="favorite-star" title="Als Favorit markieren">☆</span>
-                        <img src="assets/filestation.png" alt="File Station Cloud Icon" class="service-icon">
-                        <h3>File Station</h3>
-                        <p>Dateien in der Cloud durchsuchen, verwalten und teilen.</p>
+                    <img src="assets/filestation.png" alt="File Station Icon" class="service-icon">
+                    <h3>File Station</h3>
+                    <p>Einfacher Zugriff und Verwaltung deiner Dateien.</p>
+                </div>
+                <div class="service-card" data-service="drive">
+                    <span class="favorite-star" title="Als Favorit markieren">☆</span>
+                    <div class="service-toggle">
+                        <span class="toggle-label">Lokal</span>
+                        <label class="switch">
+                            <input type="checkbox" class="service-switch">
+                            <span class="slider round"></span>
+                        </label>
+                        <span class="toggle-label">Cloud</span>
                     </div>
-                    <div class="service-card" data-service="drive-cloud">
-                        <span class="favorite-star" title="Als Favorit markieren">☆</span>
-                        <img src="assets/drive.png" alt="Drive Cloud Icon" class="service-icon">
-                        <h3>Drive</h3>
-                        <p>Cloud-Speicher für deine wichtigsten Dokumente und Projekte.</p>
+                    <img src="assets/drive.png" alt="Drive Icon" class="service-icon">
+                    <h3>Drive</h3>
+                    <p>Dein persönlicher Cloud-Speicher für Dateien und Zusammenarbeit.</p>
+                </div>
+                <div class="service-card" data-service="photos">
+                    <span class="favorite-star" title="Als Favorit markieren">☆</span>
+                    <div class="service-toggle">
+                        <span class="toggle-label">Lokal</span>
+                        <label class="switch">
+                            <input type="checkbox" class="service-switch">
+                            <span class="slider round"></span>
+                        </label>
+                        <span class="toggle-label">Cloud</span>
                     </div>
-                    <div class="service-card" data-service="photos-cloud">
-                        <span class="favorite-star" title="Als Favorit markieren">☆</span>
-                        <img src="assets/photos.png" alt="Photos Cloud Icon" class="service-icon">
-                        <h3>Photos</h3>
-                        <p>Fotos sicher speichern, organisieren und überall abrufen.</p>
+                    <img src="assets/photos.png" alt="Photos Icon" class="service-icon">
+                    <h3>Photos</h3>
+                    <p>Organisiere und teile deine Fotos in einer modernen Galerie.</p>
+                </div>
+                <div class="service-card" data-service="video-station">
+                    <span class="favorite-star" title="Als Favorit markieren">☆</span>
+                    <div class="service-toggle">
+                        <span class="toggle-label">Lokal</span>
+                        <label class="switch">
+                            <input type="checkbox" class="service-switch">
+                            <span class="slider round"></span>
+                        </label>
+                        <span class="toggle-label">Cloud</span>
                     </div>
-                    <div class="service-card" data-service="video-station-cloud">
-                        <span class="favorite-star" title="Als Favorit markieren">☆</span>
-                        <img src="assets/videostation.png" alt="Video Station Cloud Icon" class="service-icon">
-                        <h3>Video Station</h3>
-                        <p>Videosammlung in der Cloud verwalten und streamen.</p>
+                    <img src="assets/videostation.png" alt="Video Station Icon" class="service-icon">
+                    <h3>Video Station</h3>
+                    <p>Streame und verwalte deine Videosammlung auf allen Geräten.</p>
+                </div>
+                <div class="service-card" data-service="vmm">
+                    <span class="favorite-star" title="Als Favorit markieren">☆</span>
+                    <div class="service-toggle">
+                        <span class="toggle-label">Lokal</span>
+                        <label class="switch">
+                            <input type="checkbox" class="service-switch">
+                            <span class="slider round"></span>
+                        </label>
+                        <span class="toggle-label">Cloud</span>
                     </div>
-                    <div class="service-card" data-service="vmm-cloud">
-                        <span class="favorite-star" title="Als Favorit markieren">☆</span>
-                        <img src="assets/vmm.png" alt="VMM Cloud Icon" class="service-icon">
-                        <h3>VMM</h3>
-                        <p>Virtuelle Maschinen flexibel in der Cloud betreiben.</p>
+                    <img src="assets/vmm.png" alt="VMM Icon" class="service-icon">
+                    <h3>VMM</h3>
+                    <p>Virtuelle Maschinen einfach erstellen und verwalten.</p>
+                </div>
+                <div class="service-card" data-service="home-assistant">
+                    <span class="favorite-star" title="Als Favorit markieren">☆</span>
+                    <div class="service-toggle">
+                        <span class="toggle-label">Lokal</span>
+                        <label class="switch">
+                            <input type="checkbox" class="service-switch">
+                            <span class="slider round"></span>
+                        </label>
+                        <span class="toggle-label">Cloud</span>
                     </div>
-                    <div class="service-card" data-service="home-assistant">
-                        <span class="favorite-star" title="Als Favorit markieren">☆</span>
-                        <img src="assets/homeassistant.png" alt="Home Assistant Icon" class="service-icon">
-                        <h3>Home Assistant</h3>
-                        <p>Dein Smart Home zentral steuern und automatisieren – überall erreichbar.</p>
+                    <img src="assets/homeassistant.png" alt="Home Assistant Icon" class="service-icon">
+                    <h3>Home Assistant</h3>
+                    <p>Dein Smart Home zentral steuern und automatisieren.</p>
+                </div>
+                <div class="service-card" data-service="homebox">
+                    <span class="favorite-star" title="Als Favorit markieren">☆</span>
+                    <div class="service-toggle">
+                        <span class="toggle-label">Lokal</span>
+                        <label class="switch">
+                            <input type="checkbox" class="service-switch">
+                            <span class="slider round"></span>
+                        </label>
+                        <span class="toggle-label">Cloud</span>
                     </div>
-                    <div class="service-card" data-service="homebox">
-                        <span class="favorite-star" title="Als Favorit markieren">☆</span>
-                        <img src="assets/homebox.png" alt="Homebox Icon" class="service-icon">
-                        <h3>Homebox</h3>
-                        <p>Zentrale Verwaltung deiner Heimnetzwerk-Dienste und -Geräte.</p>
+                    <img src="assets/homebox.png" alt="Homebox Icon" class="service-icon">
+                    <h3>Homebox</h3>
+                    <p>Zentrale Verwaltung deiner Heimlogistik.</p>
+                </div>
+                <div class="service-card" data-service="portainer">
+                    <span class="favorite-star" title="Als Favorit markieren">☆</span>
+                    <div class="service-toggle">
+                        <span class="toggle-label">Lokal</span>
+                        <label class="switch">
+                            <input type="checkbox" class="service-switch">
+                            <span class="slider round"></span>
+                        </label>
+                        <span class="toggle-label">Cloud</span>
                     </div>
-                    <div class="service-card" data-service="portainer">
-                        <span class="favorite-star" title="Als Favorit markieren">☆</span>
-                        <img src="assets/portainer.png" alt="Portainer Icon" class="service-icon">
-                        <h3>Portainer</h3>
-                        <p>Container und Docker-Umgebungen einfach verwalten und überwachen.</p>
-                    </div>
+                    <img src="assets/portainer.png" alt="Portainer Icon" class="service-icon">
+                    <h3>Portainer</h3>
+                    <p>Container und Docker-Umgebungen einfach verwalten.</p>
                 </div>
             </div>
         </main>

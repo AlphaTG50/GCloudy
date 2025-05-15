@@ -1,42 +1,71 @@
 document.addEventListener('DOMContentLoaded', () => {
     // Service-URLs Konfiguration
     const serviceUrls = {
-        // Lokale Dienste (immer gleiche IP + Aliasname)
-        'dsm': 'https://192.168.178.45/',
-        'active-backup': 'https://192.168.178.45/activebackup',
-        'contacts': 'https://192.168.178.45/contacts',
-        'download-station': 'https://192.168.178.45/download',
-        'file-station': 'https://192.168.178.45/file',
-        'drive': 'https://192.168.178.45/drive',
-        'photos': 'https://192.168.178.45/photo',
-        'video-station': 'https://192.168.178.45/video',
-        'vmm': 'https://192.168.178.45/vm',
-        'home-assistant-local': 'http://homeassistant.local:8123/',
-    
-        // Cloud Dienste
-        'dsm-cloud': 'https://quickconnect.to/guerkan/',
-        'active-backup-cloud': 'https://quickconnect.to/guerkan/activebackup',
-        'contacts-cloud': 'https://quickconnect.to/guerkan/contacts',
-        'download-station-cloud': 'https://quickconnect.to/guerkan/download',
-        'file-station-cloud': 'https://quickconnect.to/guerkan/file',
-        'drive-cloud': 'https://quickconnect.to/guerkan/drive',
-        'photos-cloud': 'https://quickconnect.to/guerkan/photo',
-        'video-station-cloud': 'https://quickconnect.to/guerkan/video',
-        'vmm-cloud': 'https://quickconnect.to/guerkan/vm',
+        // Lokale Dienste
+        'dsm': 'https://192.168.178.10/',
+        'active-backup': 'https://192.168.178.10/activebackup',
+        'contacts': 'https://192.168.178.10/contacts',
+        'download-station': 'https://192.168.178.10/download',
+        'file-station': 'https://192.168.178.10/file',
+        'drive': 'https://192.168.178.10/drive',
+        'photos': 'https://192.168.178.10/photo',
+        'video-station': 'https://192.168.178.10/video',
+        'vmm': 'https://192.168.178.10/vm',
+        'home-assistant': 'http://homeassistant.local:8123/',
+        'homebox': 'http://192.168.178.10:3100/',
+        'portainer': 'http://192.168.178.10:9000/'
+    };
+
+    // Cloud-URLs Konfiguration
+    const cloudUrls = {
+        'dsm': 'https://quickconnect.to/guerkan/',
+        'active-backup': 'https://quickconnect.to/guerkan/activebackup',
+        'contacts': 'https://quickconnect.to/guerkan/contacts',
+        'download-station': 'https://quickconnect.to/guerkan/download',
+        'file-station': 'https://quickconnect.to/guerkan/file',
+        'drive': 'https://quickconnect.to/guerkan/drive',
+        'photos': 'https://quickconnect.to/guerkan/photo',
+        'video-station': 'https://quickconnect.to/guerkan/video',
+        'vmm': 'https://quickconnect.to/guerkan/vm',
         'home-assistant': 'https://homeassistant.gcloudy.de/',
         'homebox': 'https://homebox.gcloudy.de/',
         'portainer': 'https://portainer.gcloudy.de/'
     };
-    
 
     // Event Listener für alle Service-Karten
     document.querySelectorAll('.service-card').forEach(card => {
-        card.addEventListener('click', () => {
+        const serviceId = card.getAttribute('data-service');
+        const switchInput = card.querySelector('.service-switch');
+        
+        // Nur Switches für Dienste mit Cloud-URL aktivieren
+        if (switchInput && cloudUrls[serviceId]) {
+            // Verhindere Event-Bubbling für den Switch-Container
+            const switchContainer = switchInput.closest('.service-toggle');
+            switchContainer.addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
+
+            switchInput.addEventListener('change', (e) => {
+                e.stopPropagation();
+                const isCloud = e.target.checked;
+                card.setAttribute('data-mode', isCloud ? 'cloud' : 'local');
+            });
+        } else if (switchInput) {
+            switchInput.parentElement.style.display = 'none';
+        }
+
+        // Klick-Handler für die Service-Karte
+        card.addEventListener('click', (e) => {
+            // Ignoriere Klicks auf den Switch oder dessen Container
+            if (e.target.closest('.service-toggle')) {
+                return;
+            }
+            
             const serviceId = card.getAttribute('data-service');
-            const url = serviceUrls[serviceId];
+            const isCloud = card.getAttribute('data-mode') === 'cloud';
+            const url = isCloud ? cloudUrls[serviceId] : serviceUrls[serviceId];
             
             if (url) {
-                // Öffne den Service in einem neuen Tab
                 window.open(url, '_blank');
             } else {
                 console.error(`URL für Service ${serviceId} nicht gefunden`);
@@ -104,16 +133,16 @@ document.addEventListener('DOMContentLoaded', () => {
     else setDarkmode(false);
 
     // Favoriten-Feature
-    function getFavorites(tab) {
-        const favs = localStorage.getItem('gcloudy_favs_' + tab);
+    function getFavorites() {
+        const favs = localStorage.getItem('gcloudy_favs');
         return favs ? JSON.parse(favs) : [];
     }
-    function setFavorites(tab, favs) {
-        localStorage.setItem('gcloudy_favs_' + tab, JSON.stringify(favs));
+    function setFavorites(favs) {
+        localStorage.setItem('gcloudy_favs', JSON.stringify(favs));
     }
-    function updateFavorites(tab) {
-        const favs = getFavorites(tab);
-        const grid = document.querySelector(`#tab-${tab} .services-grid`);
+    function updateFavorites() {
+        const favs = getFavorites();
+        const grid = document.querySelector('.services-grid');
         if (!grid) return;
         const cards = Array.from(grid.children);
         // Sortiere Favoriten nach oben, innerhalb alphabetisch
@@ -147,28 +176,26 @@ document.addEventListener('DOMContentLoaded', () => {
         star.addEventListener('click', e => {
             e.stopPropagation();
             const card = star.closest('.service-card');
-            const tab = card.closest('.tab-content').id.replace('tab-','');
             const service = card.getAttribute('data-service');
-            let favs = getFavorites(tab);
+            let favs = getFavorites();
             if (favs.includes(service)) {
                 favs = favs.filter(f => f !== service);
             } else {
                 favs.push(service);
             }
-            setFavorites(tab, favs);
-            updateFavorites(tab);
+            setFavorites(favs);
+            updateFavorites();
         });
     });
     // Beim Laden Favoriten sortieren
-    ['local','cloud'].forEach(tab => updateFavorites(tab));
+    updateFavorites();
 
     // Suchfunktionalität
     const searchInput = document.getElementById('service-search');
     if (searchInput) {
         searchInput.addEventListener('input', (e) => {
             const searchTerm = e.target.value.toLowerCase();
-            const activeTab = document.querySelector('.tab-content.active');
-            const cards = activeTab.querySelectorAll('.service-card');
+            const cards = document.querySelectorAll('.service-card');
 
             cards.forEach(card => {
                 const title = card.querySelector('h3').textContent.toLowerCase();
