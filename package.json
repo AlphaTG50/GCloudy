@@ -1,5 +1,9 @@
 {
   "dependencies": {
+<<<<<<< HEAD
     "firebase": "^11.9.0"
+=======
+    "firebase": "^11.7.1"
+>>>>>>> 5305a5b47504cb8637a87cc357a23ccdee9913d9
   }
 }
