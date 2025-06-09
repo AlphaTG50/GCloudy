@@ -1,0 +1,1911 @@
+/* Allgemeine Styles */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+:root {
+    --accent-color: #4a90e2;
+    --accent-color-hover: #3a7bd5; /* Standard-Hover-Farbe für Akzent */
+    --sidebar-bg: #2c3e50;
+    --sidebar-text: #ecf0f1;
+    --card-bg: #ffffff;
+    --card-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --text-secondary: #666666;
+    --bg-primary: #ffffff;
+    --bg-secondary: #f5f5f5;
+    --bg-secondary-hover: #e0e0e0; /* Standard-Hover-Farbe für sekundären Hintergrund */
+    --text-primary: #333333;
+    --sidebar-interactive-bg: rgba(255, 255, 255, 0.15);
+}
+
+/* Dark Mode Variablen */
+.dark-mode {
+    --card-bg: #2d3e50;
+    --card-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    --text-secondary: #bdc3c7;
+    --bg-primary: #1a1a1a;
+    --bg-secondary: #2d2d2d;
+    --bg-secondary-hover: #222222; /* Dunklere Hover-Farbe für sekundären Hintergrund im Darkmode */
+    --text-primary: #ffffff;
+    --accent-color-hover: #386bb0; /* Dunklere Akzent-Hover-Farbe im Darkmode */
+    --sidebar-bg: #1a1a1a;
+    --sidebar-text: #ffffff;
+    --sidebar-interactive-bg: rgba(255, 255, 255, 0.05);
+}
+
+/* Layout */
+body {
+    margin: 0;
+    font-family: 'Inter', Arial, sans-serif; /* Einheitliche, moderne Schriftart */
+    display: flex;
+    min-height: 100vh;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    transition: background-color 0.3s ease, color 0.3s ease;
+    overflow-x: hidden;
+}
+
+/* Login Page container to hide app content */
+.fullpage-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    width: 100%;
+    background-color: var(--bg-primary); /* Consistent background */
+}
+
+/* App Content Container (sidebar + main content) */
+#appContent {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+    background-color: var(--bg-primary);
+}
+
+.sidebar {
+    background-color: var(--sidebar-bg);
+    color: var(--sidebar-text);
+    padding: 2rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: 1.5rem;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.content {
+    flex: 1;
+    padding: 2rem;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    overflow-y: auto; /* Erlaube vertikales Scrollen im Inhaltsbereich */
+}
+
+/* Logo */
+.logo {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    padding: 0;
+}
+
+.logo img {
+    width: 100px;
+    height: auto;
+    max-width: 100%;
+    display: block;
+    margin: 0 auto;
+}
+
+/* Navigation */
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 2rem 0;
+}
+
+nav ul li {
+    margin-bottom: 0.8rem;
+}
+
+#adminNavLinkLi {
+    display: none; /* Versteckt den Admin-Link standardmäßig */
+}
+
+#nasNavLinkLi {
+    display: none; /* Versteckt den Lokale Dienste Link standardmäßig */
+}
+
+nav ul li a {
+    color: var(--sidebar-text);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    font-size: 1.05rem;
+}
+
+nav ul li a i {
+    font-size: 1.3rem;
+    width: 24px;
+    text-align: center;
+}
+
+nav ul li a:hover {
+    background-color: var(--sidebar-interactive-bg);
+    transform: translateX(5px);
+}
+
+nav ul li a.active {
+    background-color: var(--accent-color);
+    color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Bottom Section */
+.bottom-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin-top: auto;
+}
+
+.bottom-section a,
+.bottom-section button {
+    color: var(--sidebar-text);
+    background-color: var(--sidebar-interactive-bg);
+    font-size: 1.2rem;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+    text-decoration: none;
+}
+
+.bottom-section a:hover,
+.bottom-section button:hover {
+    background-color: var(--accent-color);
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* About Section (kept for completeness, assuming hidden) */
+.about-content {
+    display: none;
+}
+
+.about-section {
+    display: none;
+}
+
+/* Links Page Styles */
+.search-container {
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+.search-input {
+    width: 100%;
+    padding: 1rem;
+    padding-left: 3rem;
+    border: 2px solid var(--bg-secondary);
+    border-radius: 10px;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-size: 1rem;
+    transition: border-color 0.3s, background-color 0.3s, color 0.3s;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--accent-color);
+}
+
+.search-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-secondary);
+}
+
+.links-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.link-card {
+    background-color: var(--card-bg);
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: var(--card-shadow);
+    transition: transform 0.3s, background-color 0.3s, box-shadow 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.link-card:hover {
+    transform: translateX(10px);
+}
+
+.link-logo {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--bg-secondary);
+    border-radius: 50%;
+    color: var(--accent-color);
+    font-size: 1.5rem;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.link-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.link-content {
+    flex-grow: 1;
+}
+
+.link-card h3 {
+    color: var(--accent-color);
+    margin-bottom: 0.5rem;
+    font-size: 1.2rem;
+}
+
+.link-card p {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    line-height: 1.4;
+    margin: 0;
+}
+
+.link-card a {
+    color: white;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background-color: var(--accent-color);
+    border-radius: 5px;
+    transition: opacity 0.3s;
+    margin-left: 1rem;
+    flex-shrink: 0;
+}
+
+.link-card a:hover {
+    opacity: 0.9;
+}
+
+.link-card a i {
+    font-size: 0.9rem;
+}
+
+.no-results {
+    text-align: center;
+    color: var(--text-secondary);
+    padding: 2rem;
+    display: none;
+}
+
+/* NAS Page Styles (for login.html, adapted for single page) */
+.login-container {
+    background-color: var(--card-bg); /* Hintergrundfarbe wie link-card */
+    padding: 3rem; /* Angepasstes Padding */
+    border-radius: 15px; /* Abgerundete Ecken wie link-card */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* Modernerer Schatten */
+    max-width: 450px; /* Etwas breiter für besseren Platz */
+    margin: 2.5rem auto; /* Mehr vertikaler Abstand */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid var(--bg-secondary); /* Leichter Rand für Definition */
+}
+
+.login-container h2 {
+    text-align: center;
+    color: var(--text-primary);
+    margin-bottom: 2.5rem; /* Mehr Abstand zur Form */
+    font-size: 2.2rem;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.8rem; /* Größerer Abstand zwischen Formulargruppen */
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem; /* Angepasster Abstand im Formularfeld */
+}
+
+.login-container label {
+    display: block;
+    color: var(--text-secondary);
+    font-weight: bold;
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+}
+
+input {
+    padding: 0.8rem 1rem; /* Einheitlicheres Padding */
+    border: 1px solid var(--text-secondary); /* Leichterer Rand */
+    border-radius: 8px; /* Etwas größere Rundung */
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-size: 1rem;
+    transition: border-color 0.3s, background-color 0.3s, color 0.3s, box-shadow 0.2s;
+}
+
+input:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2); /* Sanfter Fokus-Schatten */
+}
+
+button {
+    padding: 1rem 1.5rem; /* Mehr Padding */
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    border-radius: 8px; /* Einheitliche Rundung */
+    cursor: pointer;
+    font-size: 1.1rem; /* Größere Schrift */
+    transition: background-color 0.3s, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+button:hover {
+    background-color: var(--accent-color); /* Bleibt gleich, wenn keine Hover-Farbe definiert ist */
+    opacity: 0.9;
+    transform: translateY(-2px); /* Leichter Hover-Effekt */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); /* Subtiler Schatten beim Hovern */
+}
+
+button:disabled,
+button[disabled] {
+    background-color: #cccccc; /* Hellgrauer Hintergrund */
+    color: #666666; /* Dunklerer Text */
+    cursor: not-allowed; /* Zeigt an, dass der Button nicht anklickbar ist */
+    opacity: 0.7; /* Leicht transparent */
+    transform: none; /* Entfernt den Hover-Transform-Effekt */
+    box-shadow: none; /* Entfernt den Schatten */
+}
+
+.error-message {
+    color: #e74c3c !important; /* Roter Fehlertext */
+    font-size: 0.95rem;
+    text-align: center;
+    margin-top: 1.5rem; /* Mehr Abstand */
+    display: block !important; /* Standardmäßig anzeigen, wenn Text vorhanden ist */
+}
+
+.nas-content {
+    /* Now part of nasPageContent div, will be displayed/hidden by JS */
+}
+
+/* Fullpage Login Styles */
+.login-container-fullpage {
+    background-color: var(--card-bg);
+    padding: 4rem;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    width: 90%;
+    margin: auto;
+    text-align: center;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid var(--bg-secondary);
+}
+
+.login-container-fullpage h2 {
+    text-align: center;
+    color: var(--text-primary);
+    margin-bottom: 1.5rem;
+    font-size: 2.5rem;
+}
+
+.login-container-fullpage p {
+    text-align: center;
+    color: var(--text-secondary);
+    margin-bottom: 2.5rem;
+    font-size: 1.1rem;
+}
+
+.login-form-fullpage {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.login-form-fullpage .form-group {
+    text-align: left;
+}
+
+.login-form-fullpage label {
+    display: block;
+    color: var(--text-secondary);
+    font-weight: bold;
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+}
+
+.login-form-fullpage input {
+    width: calc(100% - 22px); /* Adjust for padding */
+    padding: 0.8rem 1rem;
+    border: 1px solid var(--text-secondary);
+    border-radius: 8px;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-size: 1rem;
+    transition: border-color 0.3s, background-color 0.3s, color 0.3s, box-shadow 0.2s;
+}
+
+.login-form-fullpage input:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+}
+
+.login-form-fullpage button {
+    padding: 1rem 1.5rem;
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: background-color 0.3s, transform 0.2s ease, box-shadow 0.2s ease;
+    width: 100%; /* Make button full width */
+}
+
+.login-form-fullpage button:hover {
+    background-color: var(--accent-color);
+    opacity: 0.9;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.login-form-fullpage button:disabled,
+button[disabled] {
+    background-color: #cccccc;
+    color: #666666;
+    cursor: not-allowed;
+    opacity: 0.7;
+    transform: none;
+    box-shadow: none;
+}
+
+.guest-option {
+    margin-top: 2rem;
+}
+
+.guest-option p {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+}
+
+.btn-secondary-fullpage {
+    display: inline-block;
+    padding: 0.7rem 1.8rem;
+    border-radius: 8px; /* Consistent with other buttons */
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: 1px solid var(--text-secondary);
+    background-color: var(--card-bg);
+    color: var(--text-primary);
+    font-size: 1.1rem;
+    width: 100%; /* Make button full width */
+}
+
+.btn-secondary-fullpage:hover {
+    background-color: var(--accent-color);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-color: var(--accent-color);
+}
+
+/* Mobile responsiveness for fullpage login */
+@media (max-width: 600px) {
+    .login-container-fullpage {
+        padding: 2.5rem;
+    }
+
+    .login-container-fullpage h2 {
+        font-size: 2rem;
+    }
+
+    .login-container-fullpage p {
+        font-size: 0.95rem;
+    }
+}
+
+/* Synology Drive Link Styling (Neu) */
+.synology-drive-link-container {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.synology-drive-link-container h3 {
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+
+.synology-drive-card {
+    background-color: var(--card-bg);
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: var(--card-shadow);
+    transition: transform 0.3s, background-color 0.3s, box-shadow 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.synology-drive-card:hover {
+    transform: translateX(10px);
+}
+
+.synology-drive-card .link-logo {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--bg-secondary);
+    border-radius: 50%;
+    color: var(--accent-color);
+    font-size: 1.5rem;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.synology-drive-card .link-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.synology-drive-card .link-content {
+    flex-grow: 1;
+}
+
+.synology-drive-card h3 {
+    color: var(--accent-color);
+    margin-bottom: 0.5rem;
+    font-size: 1.2rem;
+}
+
+.synology-drive-card p {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    line-height: 1.4;
+    margin: 0;
+}
+
+.synology-drive-card a {
+    color: white;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background-color: var(--accent-color);
+    border-radius: 5px;
+    transition: opacity 0.3s;
+    margin-left: 1rem;
+    flex-shrink: 0;
+}
+
+.synology-drive-card a:hover {
+    opacity: 0.9;
+}
+
+.synology-drive-card a i {
+    font-size: 0.9rem;
+}
+
+.logout-button {
+    background-color: #e74c3c; /* Roter Button für Abmelden */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 0.8rem 1.5rem;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-top: 1.5rem;
+    transition: background-color 0.3s ease;
+}
+
+.logout-button:hover {
+    background-color: #c0392b; /* Dunklerer Rotton bei Hover */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+    }
+
+    .content {
+        margin-left: 0;
+    }
+
+    body {
+        flex-direction: column;
+    }
+}
+
+/* Hero Section */
+.hero-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--card-bg);
+    padding: 3rem 4rem; /* Erhöhtes Padding */
+    border-radius: 25px; /* Stärkere Rundung */
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); /* Subtilerer Schatten */
+    margin-bottom: 2.5rem; /* Mehr Abstand zum nächsten Abschnitt */
+    gap: 3rem; /* Größerer Abstand zwischen Inhalt und Bild */
+    flex-wrap: wrap; /* Ermöglicht das Umbrechen auf kleineren Bildschirmen */
+}
+
+.hero-content {
+    flex: 1;
+    min-width: 300px; /* Sicherstellen, dass der Inhalt nicht zu klein wird */
+}
+
+.hero-content h2 {
+    font-size: 3rem; /* Größere Überschrift */
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+    line-height: 1.2;
+}
+
+.hero-content p {
+    font-size: 1.15rem; /* Etwas größere und besser lesbare Schrift */
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 2.5rem; /* Mehr Abstand zu den Buttons */
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 1rem; /* Angepasster Abstand */
+    flex-wrap: wrap; /* Buttons umbrechen, falls zu viele */
+}
+
+.hero-image {
+    flex-shrink: 0;
+    width: 300px; /* Größer für mehr Präsenz */
+    height: 300px;
+    border-radius: 25px; /* Angleichen an Sektion-Rundung */
+    overflow: hidden;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15); /* Deutlicherer Schatten */
+    position: relative;
+    background-color: #f7e0e0;
+    margin: 0 auto;
+}
+
+.hero-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 25px; /* Sicherstellen, dass das Bild auch abgerundet ist */
+}
+
+/* Buttons (Bestehende Stile, Sicherstellung der Kompatibilität) */
+.btn-primary,
+.btn-secondary {
+    display: inline-block;
+    padding: 0.8rem 2rem; /* Angepasstes Padding */
+    border-radius: 8px; /* Einheitlichere Rundung */
+    text-decoration: none;
+    font-weight: 600; /* Etwas fetter */
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: none;
+}
+
+.btn-primary {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: var(--accent-color-hover); /* Einheitliche Hover-Farbe */
+    transform: translateY(-3px); /* Deutlicherer Hover-Effekt */
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+.btn-secondary {
+    background-color: var(--card-bg);
+    color: var(--text-primary);
+    border: 1px solid var(--bg-secondary); /* Dezenterer Rand */
+}
+
+.btn-secondary:hover {
+    background-color: var(--accent-color); /* Akzentfarbe beim Hover */
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    border-color: var(--accent-color); /* Rand auch ändern */
+}
+
+/* Education Section (Wenn noch verwendet, Anpassung für Modernität) */
+.education-section {
+    margin-bottom: 2.5rem;
+    margin-top: 2.5rem; /* Einheitlicherer Abstand */
+}
+
+.education-section h2 {
+    text-align: center;
+    font-size: 2.8rem; /* Größer und prominenter */
+    margin-bottom: 2.5rem;
+    color: var(--text-primary);
+}
+
+.education-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Angepasste Mindestbreite */
+    gap: 2rem;
+}
+
+.education-item {
+    background-color: var(--card-bg);
+    padding: 2rem; /* Mehr Padding */
+    border-radius: 18px; /* Mehr Rundung */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08); /* Dezenterer Schatten */
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.education-item:hover {
+    transform: translateY(-5px); /* Weniger starker Hover-Effekt */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12); /* Deutlicherer Schatten beim Hover */
+}
+
+.education-item i {
+    font-size: 3rem; /* Größere Icons */
+    color: var(--accent-color);
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.education-item h3 {
+    font-size: 1.4rem; /* Angepasste Schriftgröße */
+    color: var(--text-primary);
+    margin-bottom: 0.8rem;
+}
+
+.education-item p {
+    font-size: 1rem; /* Einheitlichere Schriftgröße */
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Featured Posts Section */
+.featured-posts-section {
+    margin-bottom: 3rem; /* Einheitlicher Abstand */
+    margin-top: 3rem;
+}
+
+.featured-posts-section h2 {
+    text-align: center;
+    font-size: 2.8rem; /* Konsistente Überschriftengröße */
+    margin-bottom: 2.5rem;
+    color: var(--text-primary);
+}
+
+.post-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); /* Angepasste Mindestbreite */
+    gap: 2rem;
+}
+
+.post-card {
+    background-color: var(--card-bg);
+    border-radius: 15px; /* Einheitliche Rundung */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08); /* Dezenter Schatten */
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.post-card:hover {
+    transform: translateY(-8px); /* Deutlicherer Hover-Effekt */
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.post-card img {
+    width: 100%;
+    height: 220px; /* Etwas höhere Bilder */
+    object-fit: cover;
+    transition: transform 0.3s ease; /* Übergang für Zoom-Effekt */
+}
+
+.post-card img:hover {
+    transform: scale(1.05); /* Leichter Zoom-Effekt */
+}
+
+.post-card h3 {
+    margin: 1.5rem 1.5rem 0.8rem 1.5rem; /* Angepasste Abstände */
+    font-size: 1.5rem; /* Größerer Titel */
+}
+
+.post-card h3 a {
+    text-decoration: none;
+    color: var(--text-primary);
+    transition: color 0.3s ease;
+}
+
+.post-card h3 a:hover {
+    color: var(--accent-color);
+}
+
+.post-card p {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin: 0 1.5rem 1.2rem 1.5rem; /* Angepasste Abstände */
+}
+
+.post-card .post-meta {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin: 0 1.5rem 1.5rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.post-card .post-meta i {
+    margin-right: 0;
+    color: var(--accent-color);
+}
+
+.view-all-posts {
+    text-align: center;
+    margin-top: 3rem; /* Mehr Abstand */
+}
+
+/* Responsive Design für Home Page Sections */
+@media (max-width: 992px) {
+    .hero-section {
+        padding: 2.5rem 3rem;
+        gap: 2rem;
+    }
+
+    .hero-content h2 {
+        font-size: 2.5rem;
+    }
+
+    .hero-content p {
+        font-size: 1.05rem;
+    }
+
+    .hero-image {
+        width: 250px;
+        height: 250px;
+    }
+
+    .education-section h2,
+    .featured-posts-section h2 {
+        font-size: 2.2rem;
+    }
+
+    .education-grid,
+    .post-grid {
+        gap: 1.5rem;
+    }
+
+    .education-item,
+    .post-card {
+        padding: 1.5rem;
+    }
+
+    .education-item h3,
+    .post-card h3 {
+        font-size: 1.3rem;
+    }
+
+    .education-item p,
+    .post-card p {
+        font-size: 0.9rem;
+    }
+
+    .post-card img {
+        height: 180px;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-section {
+        flex-direction: column; /* Stapeln auf kleineren Bildschirmen */
+        text-align: center;
+        padding: 2rem;
+        gap: 1.5rem;
+    }
+
+    .hero-content h2 {
+        font-size: 2.2rem;
+    }
+
+    .hero-content p {
+        font-size: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .hero-buttons {
+        justify-content: center;
+    }
+
+    .hero-image {
+        margin-top: 1.5rem;
+        width: 220px;
+        height: 220px;
+    }
+
+    .education-section h2,
+    .featured-posts-section h2 {
+        font-size: 1.8rem;
+        margin-bottom: 2rem;
+    }
+
+    .education-grid,
+    .post-grid {
+        grid-template-columns: 1fr; /* Eine Spalte auf kleinen Bildschirmen */
+        gap: 1rem;
+    }
+
+    .education-item,
+    .post-card {
+        padding: 1.2rem;
+    }
+
+    .education-item i {
+        font-size: 2.5rem;
+    }
+
+    .education-item h3,
+    .post-card h3 {
+        font-size: 1.2rem;
+    }
+
+    .education-item p,
+    .post-card p {
+        font-size: 0.85rem;
+    }
+
+    .post-card img {
+        height: 160px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-section {
+        padding: 1.5rem;
+    }
+
+    .hero-content h2 {
+        font-size: 1.8rem;
+    }
+
+    .hero-content p {
+        font-size: 0.9rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .hero-buttons {
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+
+    .btn-primary, .btn-secondary {
+        width: 100%;
+        padding: 0.7rem 1.5rem;
+        font-size: 0.9rem;
+    }
+
+    .hero-image {
+        width: 180px;
+        height: 180px;
+    }
+
+    .education-section h2,
+    .featured-posts-section h2 {
+        font-size: 1.5rem;
+    }
+
+    .education-item i {
+        font-size: 2.2rem;
+    }
+
+    .education-item h3,
+    .post-card h3 {
+        font-size: 1.1rem;
+    }
+
+    .education-item p,
+    .post-card p {
+        font-size: 0.8rem;
+    }
+
+    .post-card img {
+        height: 140px;
+    }
+}
+
+/* Contact Section */
+.contact-section {
+    background-color: var(--card-bg);
+    padding: 3rem 2rem;
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: var(--card-shadow);
+}
+
+.contact-section h2 {
+    margin-bottom: 1rem;
+}
+
+.contact-section p {
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+}
+
+/* Remove Services Section styles if not used anymore */
+.services-section {
+    display: none;
+}
+
+.services-grid {
+    display: none;
+}
+
+.service-item {
+    display: none;
+}
+
+/* Admin Portal Styles */
+
+/* New Admin Dashboard Layout */
+.admin-dashboard-new {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    background-color: var(--bg-primary);
+    padding: 3rem;
+    border-radius: 18px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    max-width: 1200px; /* Maximale Breite für bessere Lesbarkeit auf großen Bildschirmen wiederhergestellt */
+    margin: 2rem auto; /* Zentrieren und vertikalen Abstand wiederhergestellt */
+}
+
+.admin-header-new {
+    text-align: center;
+    margin-bottom: 2rem; /* Mehr Abstand */
+}
+
+.admin-header-new h2 {
+    font-size: 3rem; /* Noch größere Überschrift */
+    color: var(--accent-color); /* Akzentfarbe für die Überschrift */
+    margin-bottom: 0.8rem; /* Angepasster Abstand */
+    font-weight: 700; /* Fetter */
+    letter-spacing: -0.03em; /* Leichter Buchstabenzwischenraum */
+}
+
+.admin-header-new p {
+    font-size: 1.15rem; /* Leicht größere Schriftgröße */
+    color: var(--text-secondary); /* Sekundäre Textfarbe */
+    max-width: 700px;
+    margin: 0 auto;
+    line-height: 1.6; /* Besseres Zeilenlayout */
+}
+
+/* New Admin Tabs */
+.admin-tabs-new {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 3rem; /* Mehr Abstand zu den Inhalten */
+    border-bottom: 2px solid var(--bg-secondary); /* Sanftere Trennlinie */
+    padding-bottom: 0.5rem; /* Abstand zur Linie */
+    flex-wrap: wrap; /* Tabs umbrechen, falls zu viele */
+}
+
+.tab-button-new {
+    background-color: transparent;
+    border: none;
+    padding: 1.2rem 3rem;
+    cursor: pointer;
+    font-size: 1.15rem;
+    color: var(--text-secondary);
+    transition: color 0.3s ease, border-bottom 0.3s ease, background-color 0.3s ease;
+    border-bottom: 4px solid transparent;
+    font-weight: 600;
+    position: relative;
+    margin: 20px;
+}
+
+.tab-button-new::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: -2px; /* Unterhalb der Linie */
+    width: 0%;
+    height: 3px;
+    background-color: var(--accent-color); /* Akzentfarbe für den Unterstrich */
+    transition: width 0.3s ease-out, left 0.3s ease-out;
+    transform: translateX(-50%);
+}
+
+.tab-button-new:hover {
+    color: var(--accent-color); /* Hover-Farbe */
+    background-color: var(--bg-secondary); /* Leichter Hintergrund beim Hovern */
+    box-shadow: none;
+}
+
+.tab-button-new:hover::after {
+    width: 100%; /* Unterstrich beim Hovern vollständig anzeigen */
+}
+
+.tab-button-new.active {
+    color: var(--accent-color);
+    border-bottom: 4px solid var(--accent-color); /* Dickere aktive Linie */
+    font-weight: bold;
+    background-color: var(--bg-secondary); /* Hintergrundfarbe für aktiven Tab */
+}
+
+.tab-button-new.active::after {
+    width: 0%; /* Aktiver Tab hat bereits eine Unterstreichung durch border-bottom */
+}
+
+/* New Tab Content & Section Cards */
+.tab-content-new {
+    display: none;
+    padding: 0; /* Padding hier entfernen, da in Section-Card vorhanden */
+    flex-direction: column;
+    gap: 2.5rem; /* Einheitlicher Abstand zwischen Sektionen */
+}
+
+.tab-content-new.active {
+    display: flex;
+}
+
+.section-card {
+    background-color: var(--card-bg);
+    padding: 2.5rem; /* Einheitliches Padding */
+    border-radius: 15px; /* Einheitliche Rundung */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.07); /* Weicherer, dezenter Schatten */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid var(--bg-secondary); /* Dezenter Rahmen */
+}
+
+.section-card:hover {
+    transform: translateY(-8px); /* Etwas stärkerer Hover-Effekt */
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12); /* Stärkerer Schatten beim Hovern */
+}
+
+.section-card h3 {
+    color: var(--text-primary); /* Primäre Textfarbe */
+    font-size: 2rem; /* Größere Titel */
+    margin-bottom: 2rem; /* Mehr Abstand */
+    text-align: center;
+    font-weight: 600;
+}
+
+/* New Form Styles */
+.admin-form {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem; /* Einheitlicherer Abstand zwischen Feldern */
+}
+
+.form-group-new {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group-new label {
+    font-weight: 600; /* Etwas fetter */
+    margin-bottom: 0.6rem; /* Angepasster Abstand */
+    color: var(--text-primary); /* Primäre Textfarbe */
+    font-size: 0.95rem;
+}
+
+.admin-form input[type="text"],
+.admin-form input[type="url"],
+.admin-form textarea {
+    padding: 1.1rem 1.4rem; /* Mehr Padding */
+    border: 1px solid var(--bg-secondary-hover); /* Sanfterer Rand */
+    border-radius: 10px; /* Stärkere Rundung */
+    background-color: var(--bg-secondary); /* Leichter Hintergrund für Felder */
+    color: var(--text-primary);
+    font-size: 1rem;
+    transition: border-color 0.3s, box-shadow 0.3s, background-color 0.3s;
+}
+
+.admin-form input:focus,
+.admin-form textarea:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.15); /* Sanfterer, größerer Fokus-Schatten */
+    background-color: var(--bg-primary); /* Weißer Hintergrund bei Fokus */
+}
+
+.admin-form button.btn-primary-new {
+    background-color: var(--accent-color);
+    color: white;
+    padding: 1.2rem 2.5rem; /* Mehr Padding */
+    border: none;
+    border-radius: 10px; /* Einheitliche Rundung */
+    cursor: pointer;
+    font-size: 1.15rem; /* Größere Schrift */
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    margin-top: 2rem; /* Mehr Abstand nach oben */
+}
+
+.admin-form button.btn-primary-new:hover {
+    background-color: var(--accent-color-hover);
+    transform: translateY(-5px); /* Stärkerer Hover-Effekt */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15); /* Stärkerer Schatten */
+}
+
+/* New Items Grid (for existing links/services) */
+.items-grid-new {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Standard responsive Breite */
+    gap: 1.8rem;
+    margin-top: 2rem;
+}
+
+.item-card-new {
+    background-color: var(--bg-primary); /* Weißer Hintergrund für Karten */
+    padding: 1.5rem; /* Mehr Padding */
+    border-radius: 12px; /* Stärkere Rundung */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06); /* Dezenter Schatten */
+    display: flex;
+    align-items: center;
+    gap: 1.2rem; /* Angepasster Abstand */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid var(--bg-secondary); /* Dezenter Rahmen */
+}
+
+.item-card-new:hover {
+    transform: translateY(-5px); /* Stärkerer Hover-Effekt */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); /* Stärkerer Schatten beim Hovern */
+}
+
+.item-card-new .item-icon {
+    width: 55px; /* Größere Icons */
+    height: 55px; /* Größere Icons */
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--bg-secondary); /* Hintergrundfarbe für Icon-Kreis */
+    border-radius: 10px; /* Leicht abgerundet */
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); /* Kleiner Schatten für Icon */
+}
+
+.item-card-new .item-icon img {
+    width: 90%; /* Icon-Bild etwas kleiner, um Padding zu simulieren */
+    height: 90%;
+    object-fit: contain;
+}
+
+.item-card-new .item-icon i {
+    font-size: 1.8rem; /* Größere Icon-Schriftgröße */
+    color: var(--accent-color);
+}
+
+.item-card-new .item-content-text {
+    flex-grow: 1;
+}
+
+.item-card-new .item-content-text span {
+    font-weight: bold;
+    color: var(--text-primary);
+    font-size: 1.05rem;
+    display: block;
+    margin-bottom: 0.2rem;
+}
+
+.item-card-new .item-content-text p {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+.item-card-new .item-actions {
+    display: flex;
+    gap: 0.8rem; /* Mehr Abstand zwischen Buttons */
+}
+
+.item-card-new .item-actions button {
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    border-radius: 8px; /* Einheitliche Rundung */
+    padding: 0.6rem 1.2rem; /* Mehr Padding */
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.item-card-new .item-actions button:hover {
+    background-color: var(--accent-color-hover);
+    transform: translateY(-2px); /* Leichter Hover-Effekt */
+}
+
+.item-card-new .item-actions button.delete-new {
+    background-color: #e74c3c;
+}
+
+.item-card-new .item-actions button.delete-new:hover {
+    background-color: #c0392b;
+}
+
+/* Responsive adjustments for new admin portal */
+@media (max-width: 992px) {
+    .admin-dashboard-new {
+        padding: 2rem;
+        margin: 1.5rem auto; /* Angepasster Margin */
+        gap: 2rem;
+    }
+
+    .admin-header-new h2 {
+        font-size: 2.5rem;
+    }
+
+    .admin-header-new p {
+        font-size: 1rem;
+    }
+
+    .admin-tabs-new {
+        flex-direction: row; /* Tabs bleiben nebeneinander, wenn Platz ist */
+        justify-content: center;
+        margin-bottom: 2.5rem;
+    }
+
+    .tab-button-new {
+        padding: 1rem 2rem;
+        font-size: 1.05rem;
+    }
+
+    .section-card {
+        padding: 2rem;
+    }
+
+    .section-card h3 {
+        font-size: 1.8rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .admin-form input, .admin-form textarea {
+        padding: 1rem;
+    }
+
+    .admin-form button.btn-primary-new {
+        padding: 1rem 2rem;
+        font-size: 1.05rem;
+    }
+
+    .items-grid-new {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Angepasst für 992px */
+        gap: 1.2rem;
+    }
+
+    .item-card-new {
+        padding: 1.2rem;
+    }
+
+    .item-card-new .item-icon {
+        width: 50px;
+        height: 50px;
+    }
+
+    .item-card-new .item-icon i {
+        font-size: 1.6rem;
+    }
+
+    .item-card-new .item-content-text span {
+        font-size: 1rem;
+    }
+
+    .item-card-new .item-content-text p {
+        font-size: 0.8rem;
+    }
+
+    .item-card-new .item-actions button {
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .admin-dashboard-new {
+        padding: 1.5rem;
+        gap: 1.5rem;
+    }
+
+    .admin-header-new h2 {
+        font-size: 2rem;
+    }
+
+    .admin-header-new p {
+        font-size: 0.95rem;
+    }
+
+    .admin-tabs-new {
+        flex-direction: column; /* Tabs wieder stapeln */
+        align-items: stretch; /* Volle Breite */
+        margin-bottom: 2rem;
+        border-bottom: none; /* Keine Linie, wenn gestapelt */
+    }
+
+    .tab-button-new {
+        padding: 0.8rem 1.5rem;
+        font-size: 1rem;
+        width: 100%;
+        border-bottom: 1px solid var(--bg-secondary); /* Leichte Trennung */
+        margin-bottom: 0.5rem; /* Abstand zwischen gestapelten Tabs */
+        border-radius: 8px; /* Rundung für gestapelte Tabs */
+        background-color: var(--bg-secondary); /* Hintergrund auch im inaktiven Zustand */
+    }
+
+    .tab-button-new::after {
+        display: none; /* Unterstrich-Effekt entfernen */
+    }
+
+    .tab-button-new:hover {
+        background-color: var(--bg-secondary-hover); /* Dunklerer Hintergrund beim Hovern */
+    }
+
+    .tab-button-new.active {
+        border-bottom: 1px solid var(--accent-color); /* Akzent-Grenze für aktiven Tab */
+        background-color: var(--accent-color); /* Aktiver Tab hebt sich ab */
+        color: white;
+    }
+
+    .section-card {
+        padding: 1.5rem;
+    }
+
+    .section-card h3 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .admin-form input, .admin-form textarea {
+        padding: 0.8rem;
+    }
+
+    .admin-form button.btn-primary-new {
+        padding: 0.8rem 1.5rem;
+        font-size: 1rem;
+    }
+
+    .items-grid-new {
+        grid-template-columns: 1fr; /* Eine Spalte auf kleinen Bildschirmen */
+    }
+
+    .item-card-new {
+        flex-direction: column; /* Vertikales Layout */
+        text-align: center;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .item-card-new .item-content-text span,
+    .item-card-new .item-content-text p {
+        text-align: center;
+    }
+
+    .item-card-new .item-actions {
+        flex-direction: column;
+        width: 100%;
+        gap: 0.8rem;
+    }
+
+    .item-card-new .item-actions button {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .admin-dashboard-new {
+        padding: 1rem;
+    }
+
+    .admin-header-new h2 {
+        font-size: 1.8rem;
+    }
+
+    .admin-header-new p {
+        font-size: 0.9rem;
+    }
+
+    .tab-button-new {
+        font-size: 0.9rem;
+        padding: 0.7rem 1rem;
+    }
+
+    .section-card h3 {
+        font-size: 1.3rem;
+    }
+
+    .admin-form input, .admin-form textarea {
+        font-size: 0.9rem;
+        padding: 0.7rem;
+    }
+
+    .admin-form button.btn-primary-new {
+        font-size: 0.95rem;
+        padding: 0.7rem 1.2rem;
+    }
+
+    .item-card-new .item-icon {
+        width: 40px;
+        height: 40px;
+    }
+
+    .item-card-new .item-icon i {
+        font-size: 1.4rem;
+    }
+
+    .item-card-new .item-content-text span {
+        font-size: 0.9rem;
+    }
+
+    .item-card-new .item-content-text p {
+        font-size: 0.75rem;
+    }
+
+    .item-card-new .item-actions button {
+        font-size: 0.75rem;
+        padding: 0.4rem 0.8rem;
+    }
+}
+
+/* Entferne alte Admin-Stile (if any were present in main.css) */
+.admin-container,
+.admin-dashboard,
+.admin-header,
+.admin-header #logoutBtn,
+.admin-tabs,
+.admin-tabs .tab-button,
+.tab-content h3,
+.tab-content .form-group,
+.tab-content label,
+.tab-content input[type="text"],
+.tab-content input[type="url"],
+.tab-content textarea,
+.tab-content button,
+.tab-content ul,
+.tab-content ul li,
+.tab-content ul li .actions button,
+.link-icon-preview,
+.link-item-content {
+    display: none !important; /* Verstecke alte Elemente vollständig */
+}
+
+/* Info Modal Styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4); /* Noch dezenterer Hintergrund */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s ease-out, visibility 0.5s ease-out; /* Längere und sanftere Transition */
+}
+
+.modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-content-wrapper {
+    background-color: var(--card-bg);
+    padding: 2rem; /* Noch mehr Padding für Luft */
+    border-radius: 30px; /* Noch stärkere Rundung */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); /* Subtilerer, eleganterer Schatten */
+    max-width: 850px; /* Etwas breiter */
+    width: 90%;
+    position: relative;
+    transform: translateY(15px) scale(0.98); /* Dezenterer Startpunkt */
+    opacity: 0;
+    transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.5s cubic-bezier(0.2, 0.8, 0.2, 1); /* Elegante kubische Bezier-Kurve */
+    max-height: 90vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    transform: translateZ(0); /* Browser-Rendering-Hack für Clipping-Probleme */
+
+    /* Custom Scrollbar for Modal (Final Refinement) */
+    &::-webkit-scrollbar {
+        width: 4px; /* Dünn und dezent */
+    }
+
+    &::-webkit-scrollbar-track {
+        background: transparent; /* Vollständig transparent, um Überlappung zu vermeiden */
+        /* border-radius wird hier entfernt, da es bei transparentem Hintergrund keine Rolle spielt */
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: transparent; /* Vollständig transparent im Ruhezustand */
+        border-radius: 9999px; /* Extrem hoher Wert für pillenförmige Rundung */
+        border: none;
+        transition: background-color 0.3s ease; /* Sanfter Übergang beim Erscheinen */
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+        background-color: var(--accent-color); /* Akzentfarbe beim Hover */
+    }
+}
+
+.modal-overlay.active .modal-content-wrapper {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+}
+
+.modal-close-button {
+    position: absolute;
+    top: 25px;
+    right: 25px;
+    background: none;
+    border: none;
+    font-size: 2.2rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 1010;
+    padding: 8px;
+    border-radius: 50%;
+    opacity: 0.8;
+}
+
+.modal-close-button:hover {
+    background-color: transparent;
+    box-shadow: none;
+    color: var(--accent-color);
+    transform: scale(1.15); /* Etwas stärkere Skalierung */
+    opacity: 1;
+}
+
+.modal-page-content {
+    flex-grow: 1;
+    padding: 30px; /* Padding hinzufügen, um Scrollbar von den Kanten wegzuhalten */
+}
+
+.modal-page-content .hero-section {
+    padding: 0;
+    box-shadow: none;
+    margin-bottom: 3rem;
+    flex-direction: column;
+    text-align: center;
+    border-radius: 0;
+}
+
+.modal-page-content .hero-content h2 {
+    font-size: 2.8rem;
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+}
+
+.modal-page-content .hero-content p {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 2rem;
+}
+
+.modal-page-content .hero-image {
+    margin-top: 2.5rem;
+    width: 220px;
+    height: 220px;
+    border-radius: 20px;
+    /* Deutlicherer Schatten für das Bild */
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+}
+
+.modal-page-content .hero-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.modal-page-content .hero-image img:hover {
+    transform: scale(1.02);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.modal-page-content .education-section {
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+}
+
+.modal-page-content .education-section h2 {
+    font-size: 2.5rem; /* Größer und prominenter */
+    margin-bottom: 2.5rem;
+    color: var(--text-primary);
+}
+
+.modal-page-content .education-grid {
+    gap: 1.5rem; /* Angepasster Abstand im Grid */
+}
+
+.modal-page-content .education-item {
+    box-shadow: none;
+    border: 1px solid var(--bg-secondary); /* Leichter Rand für Definition */
+    background-color: var(--bg-primary);
+    padding: 2rem; /* Mehr Padding */
+    border-radius: 15px; /* Mehr Rundung */
+    transition: transform 0.3s ease-out, box-shadow 0.3s ease-out; /* Sanftere Transition */
+}
+
+.modal-page-content .education-item:hover {
+    transform: translateY(-6px); /* Subtilerer Hover-Effekt */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); /* Dezenter Schatten beim Hover */
+}
+
+.modal-page-content .education-item i {
+    font-size: 3rem; /* Größere Icons */
+    margin-bottom: 1rem;
+}
+
+.modal-page-content .education-item h3 {
+    font-size: 1.5rem; /* Größerer Titel */
+    margin-bottom: 0.8rem;
+}
+
+.modal-page-content .education-item p {
+    font-size: 0.95rem; /* Etwas größere Schrift */
+    line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+    .modal-content-wrapper {
+        padding: 2.5rem; /* Angepasstes Padding */
+    }
+
+    .modal-close-button {
+        font-size: 2rem;
+        top: 20px;
+        right: 20px;
+    }
+
+    .modal-page-content .hero-section {
+        margin-bottom: 2rem;
+    }
+
+    .modal-page-content .hero-content h2 {
+        font-size: 2.2rem;
+    }
+
+    .modal-page-content .hero-content p {
+        font-size: 1rem;
+    }
+
+    .modal-page-content .hero-image {
+        margin-top: 2rem;
+        width: 180px;
+        height: 180px;
+    }
+
+    .modal-page-content .education-section {
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .modal-page-content .education-section h2 {
+        font-size: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .modal-page-content .education-item {
+        padding: 1.5rem;
+    }
+
+    .modal-page-content .education-item i {
+        font-size: 2.5rem;
+    }
+
+    .modal-page-content .education-item h3 {
+        font-size: 1.3rem;
+    }
+
+    .modal-page-content .education-item p {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .modal-content-wrapper {
+        padding: 1.8rem;
+    }
+
+    .modal-close-button {
+        font-size: 1.8rem;
+        top: 15px;
+        right: 15px;
+    }
+
+    .modal-page-content .hero-section h2 {
+        font-size: 1.8rem;
+    }
+
+    .modal-page-content .hero-section p {
+        font-size: 0.95rem;
+    }
+
+    .modal-page-content .education-section h2 {
+        font-size: 1.6rem;
+    }
+
+    .modal-page-content .education-item {
+        padding: 1.3rem;
+    }
+
+    .modal-page-content .education-item h3 {
+        font-size: 1.2rem;
+    }
+
+    .modal-page-content .education-item p {
+        font-size: 0.85rem;
+    }
+}
+
+/* Placeholder Styles */
+.admin-form input::placeholder,
+.admin-form textarea::placeholder {
+    color: var(--text-secondary); /* Helle, dezente Farbe für Platzhalter */
+    opacity: 0.7; /* Leicht transparent für weicheren Look */
+}
+
+/* Required Asterisk Style */
+.required-asterisk {
+    color: var(--accent-color); /* Akzentfarbe für das Pflichtfeld-Sternchen */
+    margin-left: 5px;
+} 

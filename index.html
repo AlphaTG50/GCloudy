@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GCloudy - Persönlicher Blog</title>
+    <!-- Integrated CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Google Fonts - Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome (external, keep as is) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="light-mode">
+    <!-- Main Application Content -->
+    <div id="appContent">
+    <div class="sidebar">
+        <div class="logo">
+            <img src="assets/gcloudy.png" alt="GCloudy Logo">
+        </div>
+        <nav>
+            <ul>
+                    <li><a href="#home" data-page="home"><i class="fas fa-home"></i> Startseite</a></li>
+                    <li><a href="#links" data-page="links"><i class="fas fa-link"></i> Weblinks</a></li>
+                    <!-- NAS/Dienste link will be added dynamically here by JS -->
+                    <li id="adminNavLinkLi"><a href="#admin" data-page="admin"><i class="fas fa-user-shield"></i> Admin</a></li>
+            </ul>
+        </nav>
+        <div class="bottom-section">
+            <a href="https://github.com/AlphaTG50" target="_blank" title="GitHub">
+                <i class="fab fa-github"></i>
+            </a>
+            <a href="https://instagram.com/TurkGurkan50" target="_blank" title="Instagram">
+                <i class="fab fa-instagram"></i>
+            </a>
+            <button id="bottomSectionLogoutBtn" title="Abmelden">
+                <i class="fas fa-sign-out-alt"></i>
+            </button>
+            <button id="themeToggle">
+                <i class="fas fa-adjust"></i>
+            </button>
+            <button id="infoButton" title="Informationen">
+                <i class="fas fa-info-circle"></i>
+            </button>
+        </div>
+    </div>
+
+    <main class="content">
+            <!-- Home Page Content -->
+            <div id="homePageContent" class="page-content">
+        <header>
+            <h1>Willkommen auf GCloudy</h1>
+        </header>
+        <section class="hero-section">
+            <div class="hero-content">
+                <h2>Ihre digitale Anlaufstelle für Innovation & Wissen</h2>
+                <p>Willkommen bei GCloudy – Ihrer zentralen Plattform für persönliche Projekte, wertvolle Ressourcen und tiefe Einblicke in Technologie und mehr. Entdecken Sie meine Arbeit, finden Sie nützliche Weblinks und verfolgen Sie meine neuesten Erkenntnisse.</p>
+                <div class="hero-buttons">
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="assets/gcloudy.png" alt="GCloudy Logo">
+            </div>
+        </section>
+            </div>
+
+            <!-- Links Page Content -->
+            <div id="linksPageContent" class="page-content" style="display: none;">
+                <header>
+                    <h2>Weblinks</h2>
+                    <p>Eine Sammlung interessanter und hilfreicher Links.</p>
+                </header>
+                <div class="search-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="search-input" id="searchInput" placeholder="Links durchsuchen...">
+                </div>
+                <div class="no-results" id="noResults">
+                    Keine Ergebnisse gefunden
+                </div>
+                <div class="links-list" id="linksList">
+                    <!-- Links werden hier von JavaScript geladen -->
+                </div>
+            </div>
+
+            <!-- NAS/Local Services Page Content -->
+            <div id="nasPageContent" class="page-content" style="display: none;">
+                <div class="nas-content" id="nasContent">
+                    <h2>Dienste Dashboard</h2>
+                    <p>Willkommen im geschützten Bereich Ihrer lokalen Dienste.</p>
+                    <div class="search-container">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" class="search-input" id="nasSearchInput" placeholder="Dienste durchsuchen...">
+                    </div>
+                    <div class="synology-drive-link-container" id="localServicesListContainer">
+                        <!-- Dienste werden hier von JavaScript geladen -->
+                    </div>
+                    <div class="no-results" id="noNasResults">
+                        Keine Ergebnisse gefunden
+                    </div>
+                </div>
+            </div>
+
+            <!-- Admin Page Content -->
+            <div id="adminPageContent" class="page-content" style="display: none;">
+                <div class="admin-dashboard-new" id="adminDashboard">
+                    <div class="admin-header-new">
+                        <h2>Admin Dashboard</h2>
+                        <p>Verwalten Sie Ihre Inhalte effizient und intuitiv.</p>
+                    </div>
+                    <div class="admin-tabs-new">
+                        <button class="tab-button-new active" data-tab="links">Weblinks</button>
+                        <button class="tab-button-new" data-tab="synology">Lokale Dienste</button>
+                    </div>
+                    <div id="linksTabContent" class="tab-content-new">
+                        <div class="section-card">
+                            <h3>Link hinzufügen / bearbeiten</h3>
+                            <form id="linkForm" class="admin-form">
+                                <div class="form-group-new">
+                                    <label for="linkTitle">Titel <span class="required-asterisk">*</span></label>
+                                    <input type="text" id="linkTitle" required placeholder="Titel des Weblinks">
+                                </div>
+                                <div class="form-group-new">
+                                    <label for="linkUrl">URL <span class="required-asterisk">*</span></label>
+                                    <input type="url" id="linkUrl" required placeholder="https://example.com">
+                                </div>
+                                <div class="form-group-new">
+                                    <label for="linkDescription">Beschreibung</label>
+                                    <textarea id="linkDescription" rows="3" placeholder="Kurze Beschreibung des Links"></textarea>
+                                </div>
+                                <div class="form-group-new" id="linkIconUrlGroup">
+                                    <label for="linkIconUrl">Icon URL</label>
+                                    <input type="url" id="linkIconUrl" placeholder="https://example.com/icon.png oder Font Awesome Klasse (z.B. fas fa-home)">
+                                </div>
+                                <button type="submit" id="saveLinkBtn" class="btn-primary-new">Speichern</button>
+                            </form>
+                        </div>
+                        <div class="section-card">
+                            <h3>Bestehende Weblinks</h3>
+                            <div class="items-grid-new" id="linksListAdmin">
+                                <!-- Links werden hier von JavaScript geladen -->
+                            </div>
+                        </div>
+                    </div>
+                    <div id="synologyTabContent" class="tab-content-new">
+                        <div class="section-card">
+                            <h3>Lokalen Dienst hinzufügen / bearbeiten</h3>
+                            <form id="localServiceForm" class="admin-form">
+                                <div class="form-group-new">
+                                    <label for="localServiceTitle">Titel <span class="required-asterisk">*</span></label>
+                                    <input type="text" id="localServiceTitle" required placeholder="Titel des Dienstes">
+                                </div>
+                                <div class="form-group-new">
+                                    <label for="localServiceUrl">URL <span class="required-asterisk">*</span></label>
+                                    <input type="url" id="localServiceUrl" required placeholder="https://dienst.example.com">
+                                </div>
+                                <div class="form-group-new">
+                                    <label for="localServiceDescription">Beschreibung</label>
+                                    <textarea id="localServiceDescription" rows="3" placeholder="Kurze Beschreibung des Dienstes"></textarea>
+                                </div>
+                                <div class="form-group-new">
+                                    <label for="localServiceIconUrl">Icon URL</label>
+                                    <input type="url" id="localServiceIconUrl" placeholder="https://dienst.example.com/icon.png oder Font Awesome Klasse">
+                                </div>
+                                <button type="submit" id="saveLocalServiceBtn" class="btn-primary-new">Dienst speichern</button>
+                            </form>
+                        </div>
+                        <div class="section-card">
+                            <h3>Bestehende lokale Dienste</h3>
+                            <div class="items-grid-new" id="localServicesListAdmin">
+                                <!-- Lokale Dienste werden hier von JavaScript geladen -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </main>
+    </div>
+
+    <!-- Info Modal Structure -->
+    <div id="infoModal" class="modal-overlay">
+        <div class="modal-content-wrapper">
+            <button class="modal-close-button"><i class="fas fa-times"></i></button>
+            <div id="infoPageContent" class="modal-page-content">
+                <header>
+                    <h1>Über Gürkan</h1>
+                </header>
+                <section class="hero-section">
+                    <div class="hero-content">
+                        <h2>Ich bin Gürkan</h2>
+                        <div class="hero-image">
+                            <img src="assets/guerkan.png" alt="Profilbild">
+                        </div>
+                        <p>Ich bin ein neugieriger Kopf, der sich ständig weiterentwickelt.
+                            Schon seit meiner Kindheit hinterfrage ich Dinge, will verstehen, wie sie funktionieren, und suche nach Wegen, sie zu verbessern.
+                            Mein Ziel ist es, mein Leben – sowohl persönlich als auch beruflich – durch kontinuierliches Lernen, Reflektieren und Optimieren auf das nächste Level zu bringen.</p>
+                        <div class="hero-buttons">
+                        </div>
+                    </div>
+
+                </section>
+                <section class="education-section">
+                    <h2>Meine Ausbildung</h2>
+                    <div class="education-grid">
+                        <div class="education-item">
+                            <h3><i class="fas fa-school"></i> Mittlere Reife</h3>
+                            <p><em>2016 - 2021</em></p>
+                            <p>Abschluss an der Realschule im mathematisch-technischen Zweig.</p>
+                        </div>
+                        <div class="education-item">
+                            <h3><i class="fas fa-book-open"></i> Kaufmännische Ausbildung</h3>
+                            <p><em>01.09.2021 - 31.10.2022</em></p>
+                            <p>Eine 1-jährige kaufmännische Ausbildung. Frühzeitig beendet, um mich auf meine Leidenschaft für die IT zu konzentrieren.</p>
+                        </div>
+                        <div class="education-item">
+                            <h3><i class="fas fa-laptop-code"></i> Fachinformatiker Systemintegration</h3>
+                            <p><em>01.11.2022 - 31.08.2025</em></p>
+                            <p>Erfolgreich abgeschlossene 3-jährige Ausbildung als Fachinformatiker für Systemintegration. Schwerpunkte: Netzwerke, Serververwaltung, IT-Sicherheit und Systemadministration.</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main JavaScript -->
+    <script type="module" src="js/main.js"></script>
+</body>
+</html> 
