@@ -6,8 +6,13 @@ DirectoryIndex index.html
     Deny from all
 </Files>
 
-# Erlaube Zugriff auf main.html nur nach erfolgreicher Authentifizierung
+# Erlaube Zugriff auf main.html für authentifizierte Benutzer und Gäste
 <FilesMatch "main\.html$">
     Order Allow,Deny
     Allow from all
-</FilesMatch> 
+</FilesMatch>
+
+# Leite alle Anfragen für main.html zur index.html um
+RewriteEngine On
+RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s/+main\.html [NC]
+RewriteRule ^ /index.html [R=301,L] 

@@ -31,6 +31,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const authErrorMessage = document.getElementById('authErrorMessageFullPage');
     const guestLoginBtn = document.getElementById('guestLoginBtn');
 
+    // Dark Mode Initialisierung
+    const isDarkMode = localStorage.getItem('darkMode') === 'true';
+    if (isDarkMode) {
+        document.body.classList.add('dark-mode');
+    }
+
     let loginAttempts = parseInt(localStorage.getItem('fullPageLoginAttempts')) || 0;
     let cooldownEndTime = parseInt(localStorage.getItem('fullPageCooldownEndTime')) || 0;
 
@@ -120,10 +126,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (guestLoginBtn) {
-        guestLoginBtn.addEventListener('click', () => {
-            localStorage.setItem('loggedIn', 'true');
-            localStorage.setItem('userEmail', 'guest');
-            window.location.href = 'main.html';
+        guestLoginBtn.addEventListener('click', async () => {
+            try {
+                // Setze den Gast-Status im localStorage
+                localStorage.setItem('loggedIn', 'true');
+                localStorage.setItem('userEmail', 'guest');
+                
+                // Weiterleitung zur Hauptseite
+                window.location.href = 'main.html';
+            } catch (error) {
+                console.error('Gast-Login Fehler:', error);
+                authErrorMessage.textContent = 'Fehler beim Gast-Login: ' + error.message;
+                authErrorMessage.style.display = 'block';
+            }
         });
     }
 }); 

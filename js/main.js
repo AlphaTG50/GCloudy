@@ -22,6 +22,16 @@ const analytics = getAnalytics(app);
 const db = getFirestore(app);
 const auth = getAuth(app);
 
+// Sofortige Authentifizierungsprüfung
+onAuthStateChanged(auth, (user) => {
+    // Prüfe auf Gast-Login oder authentifizierten Benutzer
+    if (!user && localStorage.getItem('loggedIn') !== 'true') {
+        // Wenn kein Benutzer angemeldet ist und kein Gast-Login, zur Login-Seite umleiten
+        window.location.href = 'index.html';
+        return;
+    }
+});
+
 // Debug-Logging aktivieren
 console.log('Firebase initialisiert');
 
@@ -84,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function toggleTheme() {
         document.body.classList.toggle('dark-mode');
         const isDarkMode = document.body.classList.contains('dark-mode');
-        localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+        localStorage.setItem('darkMode', isDarkMode);
     }
 
     if (themeToggle) {
@@ -95,8 +105,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Theme aus localStorage laden
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark') {
+    const savedTheme = localStorage.getItem('darkMode');
+    if (savedTheme === 'true') {
         document.body.classList.add('dark-mode');
     }
 
@@ -346,6 +356,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Alten Event Listener entfernen
         if (form.submitHandler) {
             form.removeEventListener('submit', form.submitHandler);
+            form.submitHandler = null;
         }
         
         // Temporären Event Listener für das Update hinzufügen
@@ -400,6 +411,12 @@ document.addEventListener('DOMContentLoaded', () => {
         form.reset();
         const submitButton = form.querySelector('button[type="submit"]');
         submitButton.textContent = 'Link hinzufügen';
+        
+        // Event Listener entfernen
+        if (form.submitHandler) {
+            form.removeEventListener('submit', form.submitHandler);
+            form.submitHandler = null;
+        }
     }
 
     // Funktion zum Laden der Links im Admin-Bereich
@@ -722,6 +739,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateNavigationVisibility(user) {
         const userEmail = user ? user.email : localStorage.getItem('userEmail');
         const isAdmin = userEmail === 'guerkan.privat@gmail.com';
+        const isGuest = userEmail === 'guest';
 
         // Desktop Navigation
         const nasNavLink = document.getElementById('nasNavLinkLi');
@@ -884,6 +902,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Alten Event Listener entfernen
         if (form.submitHandler) {
             form.removeEventListener('submit', form.submitHandler);
+            form.submitHandler = null;
         }
         
         // Temporären Event Listener für das Update hinzufügen
@@ -897,8 +916,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (!newTitle || !newUrl) {
                 showToast('Bitte füllen Sie mindestens Titel und URL aus', 'error');
-                        return;
-                    }
+                return;
+            }
 
             try {
                 // Aktualisiere den bestehenden Dienst
@@ -920,6 +939,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Dienste aktualisieren
                 await loadAdminServices();
                 await renderServices();
+                showToast('Dienst wurde erfolgreich aktualisiert', 'info');
             } catch (error) {
                 console.error('Fehler beim Aktualisieren des Dienstes:', error);
                 showToast('Fehler beim Aktualisieren des Dienstes: ' + error.message, 'error');
@@ -948,12 +968,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Funktion zum Zurücksetzen des Dienst-Formulars
+    // Funktion zum Zurücksetzen des Service-Formulars
     function resetServiceForm() {
         const form = document.getElementById('addServiceForm');
         form.reset();
         const submitButton = form.querySelector('button[type="submit"]');
         submitButton.textContent = 'Dienst hinzufügen';
+        
+        // Event Listener entfernen
+        if (form.submitHandler) {
+            form.removeEventListener('submit', form.submitHandler);
+            form.submitHandler = null;
+        }
     }
 
     // Admin Panel Funktionen
@@ -963,82 +989,52 @@ document.addEventListener('DOMContentLoaded', () => {
         const addLinkForm = document.getElementById('addLinkForm');
         const addServiceForm = document.getElementById('addServiceForm');
 
-        // Tab-Wechsel-Funktion
         function switchTab(activeTab) {
+            // Tab-Buttons aktualisieren
             tabButtons.forEach(button => {
-                button.classList.remove('active');
                 if (button.dataset.tab === activeTab) {
                     button.classList.add('active');
+                } else {
+                    button.classList.remove('active');
                 }
             });
 
+            // Tab-Inhalte aktualisieren
             tabContents.forEach(content => {
-                content.style.display = 'none';
                 if (content.id === `${activeTab}TabContent`) {
                     content.style.display = 'block';
+                    // Initialisiere den entsprechenden Tab-Inhalt
+                    if (activeTab === 'links') {
+                        loadAdminLinks();
+                    } else if (activeTab === 'services') {
+                        loadAdminServices();
+                    } else if (activeTab === 'bug-reports') {
+                        initializeBugReportsAdmin();
+                    }
+                } else {
+                    content.style.display = 'none';
                 }
             });
-
-            // Spezifische Initialisierung für jeden Tab
-            if (activeTab === 'links') {
-                loadAdminLinks();
-            } else if (activeTab === 'services') {
-                loadAdminServices();
-            } else if (activeTab === 'bug-reports') {
-                // Bug Reports Tab initialisieren
-                const bugReportsTabContent = document.getElementById('bug-reportsTabContent');
-                if (!bugReportsTabContent) {
-                    const newTabContent = document.createElement('div');
-                    newTabContent.id = 'bug-reportsTabContent';
-                    newTabContent.className = 'tab-content-new';
-                    newTabContent.innerHTML = `
-                        <div class="section-card">
-                            <h3>Bug Reports</h3>
-                            <div class="bug-reports-filters">
-                                <div class="filter-group">
-                                    <label for="statusFilter">Status:</label>
-                                    <select id="statusFilter" class="filter-select">
-                                        <option value="all">Alle</option>
-                                        <option value="new">Neu</option>
-                                        <option value="in-progress">In Bearbeitung</option>
-                                        <option value="resolved">Gelöst</option>
-                                        <option value="closed">Geschlossen</option>
-                                    </select>
-                                </div>
-                                <div class="filter-group">
-                                    <label for="priorityFilter">Priorität:</label>
-                                    <select id="priorityFilter" class="filter-select">
-                                        <option value="all">Alle</option>
-                                        <option value="low">Niedrig</option>
-                                        <option value="medium">Mittel</option>
-                                        <option value="high">Hoch</option>
-                                        <option value="critical">Kritisch</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div id="bugReportsList" class="bug-reports-list">
-                                <!-- Bug Reports werden hier dynamisch eingefügt -->
-                            </div>
-                        </div>
-                    `;
-                    document.querySelector('.admin-tabs-new').parentNode.appendChild(newTabContent);
-                }
-                initializeBugReportsAdmin();
-            }
         }
 
-        // Event Listener für Tab-Buttons
+        // Event-Listener für Tab-Buttons
         tabButtons.forEach(button => {
             button.addEventListener('click', () => {
                 switchTab(button.dataset.tab);
             });
         });
 
-        // Initial den ersten Tab aktivieren
-        switchTab('links');
+        // Initialisiere den aktiven Tab
+        const activeTab = document.querySelector('.tab-button-new.active').dataset.tab;
+        switchTab(activeTab);
 
         // Link Form Handler
         if (addLinkForm) {
+            // Alten Event Listener entfernen, falls vorhanden
+            if (addLinkForm.submitHandler) {
+                addLinkForm.removeEventListener('submit', addLinkForm.submitHandler);
+            }
+
             const addHandler = async function(e) {
                 e.preventDefault();
                 const formData = {
@@ -1051,7 +1047,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 };
 
                 try {
-                    await addDoc(collection(db, 'weblinks'), formData);
+                    await addDoc(collection(db, 'Weblinks'), formData);
                     showToast('Link erfolgreich hinzugefügt', 'success');
                     resetLinkForm();
                     await loadAdminLinks();
@@ -1061,11 +1057,18 @@ document.addEventListener('DOMContentLoaded', () => {
                     showToast('Fehler beim Hinzufügen des Links', 'error');
                 }
             };
+
             addLinkForm.addEventListener('submit', addHandler);
+            addLinkForm.submitHandler = addHandler;
         }
 
         // Service Form Handler
         if (addServiceForm) {
+            // Alten Event Listener entfernen, falls vorhanden
+            if (addServiceForm.submitHandler) {
+                addServiceForm.removeEventListener('submit', addServiceForm.submitHandler);
+            }
+
             const addHandler = async function(e) {
                 e.preventDefault();
                 const formData = {
@@ -1078,7 +1081,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 };
 
                 try {
-                    await addDoc(collection(db, 'services'), formData);
+                    await addDoc(collection(db, 'Dienste'), formData);
                     showToast('Dienst erfolgreich hinzugefügt', 'success');
                     resetServiceForm();
                     await loadAdminServices();
@@ -1088,7 +1091,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     showToast('Fehler beim Hinzufügen des Dienstes', 'error');
                 }
             };
+
             addServiceForm.addEventListener('submit', addHandler);
+            addServiceForm.submitHandler = addHandler;
         }
     }
 
@@ -1111,25 +1116,26 @@ document.addEventListener('DOMContentLoaded', () => {
         const createSuggestionItem = (item, type, index) => {
             const div = document.createElement('div');
             div.className = 'suggestion-item';
-            div.setAttribute('data-index', index);
+            div.dataset.index = index;
             
-            const icon = type === 'link' ? 'fa-link' : 'fa-server';
-            const typeText = type === 'link' ? 'Link' : 'Dienst';
-            
+            // Icon basierend auf Typ und Icon-URL
+            let iconHtml = '';
+            if (item.iconUrl) {
+                iconHtml = `<img src="${item.iconUrl}" alt="${item.title}" class="suggestion-icon-img">`;
+            } else {
+                iconHtml = `<i class="fas ${type === 'link' ? 'fa-link' : 'fa-server'}"></i>`;
+            }
+
             div.innerHTML = `
-                <i class="fas ${icon}"></i>
                 <div class="suggestion-content">
-                    <div class="suggestion-title">${item.title || 'Kein Titel'}</div>
-                    <div class="suggestion-description">${item.description || 'Keine Beschreibung verfügbar.'}</div>
+                    ${iconHtml}
+                    <div class="suggestion-text">
+                        <div class="suggestion-title">${item.title}</div>
+                        <div class="suggestion-description">${item.description || ''}</div>
+                    </div>
                 </div>
-                <span class="suggestion-type">${typeText}</span>
+                <div class="suggestion-type">${type === 'link' ? 'Link' : 'Dienst'}</div>
             `;
-
-            div.addEventListener('click', () => {
-                window.open(item.url, '_blank');
-                suggestionsContainer.classList.remove('show');
-            });
-
             return div;
         };
 

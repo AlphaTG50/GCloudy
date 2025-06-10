@@ -56,7 +56,7 @@
                     <li><a href="#links" data-page="links"><i class="fas fa-link"></i> Links</a></li>
                     <li id="nasNavLinkLi"><a href="#nas" data-page="nas"><i class="fas fa-server"></i> Dienste</a></li>
                     <li id="adminNavLinkLi"><a href="#admin" data-page="admin"><i class="fas fa-cog"></i> Admin</a></li>
-                    <li><a href="#bug-report" data-page="bug-report"><i class="fas fa-bug"></i> Bugreport</a></li>
+                    <li><a href="#bug-report" data-page="bug-report"><i class="fas fa-bug"></i> Bug melden</a></li>
                 </ul>
             </nav>
             <div class="bottom-section">
@@ -198,13 +198,45 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Bug Reports Tab -->
+                    <div id="bug-reportsTabContent" class="tab-content-new" style="display: none;">
+                        <div class="section-card">
+                            <h3>Bug Reports</h3>
+                            <div class="bug-reports-filters">
+                                <div class="filter-group">
+                                    <label for="statusFilter">Status:</label>
+                                    <select id="statusFilter" class="filter-select">
+                                        <option value="all">Alle</option>
+                                        <option value="new">Neu</option>
+                                        <option value="in-progress">In Bearbeitung</option>
+                                        <option value="resolved">Gelöst</option>
+                                        <option value="closed">Geschlossen</option>
+                                    </select>
+                                </div>
+                                <div class="filter-group">
+                                    <label for="priorityFilter">Priorität:</label>
+                                    <select id="priorityFilter" class="filter-select">
+                                        <option value="all">Alle</option>
+                                        <option value="low">Niedrig</option>
+                                        <option value="medium">Mittel</option>
+                                        <option value="high">Hoch</option>
+                                        <option value="critical">Kritisch</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div id="bugReportsList" class="bug-reports-list">
+                                <!-- Bug Reports werden hier dynamisch eingefügt -->
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <!-- Bug Report Page -->
             <div id="bug-report" class="page" style="display: none;">
                 <div class="page-header">
-                    <h2>Bugreport</h2>
+                    <h2>Bug melden</h2>
                     <p>Helfen Sie uns, GCloudy zu verbessern</p>
                 </div>
                 <div class="bug-report-container">
@@ -272,7 +304,7 @@
                             </div>
                         </div>
                         <div class="form-buttons">
-                            <button type="submit" class="btn-primary-new">Bugreport</button>
+                            <button type="submit" class="btn-primary-new">Bug melden</button>
                             <button type="reset" class="btn-secondary-new">Formular zurücksetzen</button>
                         </div>
                     </form>
@@ -287,6 +319,7 @@
                     <li><a href="#links" data-page="links"><i class="fas fa-link"></i> Links</a></li>
                     <li id="mobileNasNavLinkLi"><a href="#nas" data-page="nas"><i class="fas fa-server"></i> Dienste</a></li>
                     <li id="mobileAdminNavLinkLi"><a href="#admin" data-page="admin"><i class="fas fa-cog"></i> Admin</a></li>
+                    <li><a href="#bug-report" data-page="bug-report"><i class="fas fa-bug"></i> Bug melden</a></li>
                 </ul>
                 <div class="mobile-nav-actions">
                     <a href="https://github.com/AlphaTG50" target="_blank" class="nav-action-btn" aria-label="GitHub">
