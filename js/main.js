@@ -61,6 +61,24 @@ window.closeQRModal = function() {
     modal.classList.remove('show');
 }
 
+// Zurück nach oben Button Funktionalität
+const backToTopButton = document.getElementById('backToTop');
+
+window.addEventListener('scroll', () => {
+    if (window.pageYOffset > 300) {
+        backToTopButton.style.display = 'flex';
+    } else {
+        backToTopButton.style.display = 'none';
+    }
+});
+
+backToTopButton.addEventListener('click', () => {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+});
+
 // Hauptanwendung
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM geladen, starte Anwendung...');
@@ -135,7 +153,11 @@ document.addEventListener('DOMContentLoaded', () => {
             let hasResults = false;
 
             if (linksList) {
-                linksList.innerHTML = '';
+                // Container leeren
+                while (linksList.firstChild) {
+                    linksList.removeChild(linksList.firstChild);
+                }
+                
                 const links = await getWeblinksFromFirestore();
                 
                 links.forEach(link => {
@@ -170,6 +192,9 @@ document.addEventListener('DOMContentLoaded', () => {
                                 </div>
                             </div>
                             <div class="link-actions">
+                                <button class="toggle-dates-btn" title="Datumsinformationen anzeigen/ausblenden">
+                                    <i class="fas fa-calendar-alt"></i>
+                                </button>
                                 <button class="qr-button" onclick="showQRCode('${link.url}')">
                                     <i class="fas fa-qrcode"></i>
                                 </button>
@@ -178,6 +203,16 @@ document.addEventListener('DOMContentLoaded', () => {
                                 </a>
                             </div>
                         `;
+
+                        // Event Listener für den Toggle-Button
+                        const toggleBtn = linkCard.querySelector('.toggle-dates-btn');
+                        const datesDiv = linkCard.querySelector('.item-dates');
+                        toggleBtn.addEventListener('click', () => {
+                            datesDiv.classList.toggle('show');
+                            toggleBtn.querySelector('i').classList.toggle('fa-calendar-alt');
+                            toggleBtn.querySelector('i').classList.toggle('fa-calendar-check');
+                        });
+
                         linksList.appendChild(linkCard);
                         hasResults = true;
                     }
@@ -486,6 +521,9 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
                 </div>
                 <div class="item-actions">
+            <button class="toggle-dates-btn" title="Datumsinformationen anzeigen/ausblenden">
+                <i class="fas fa-calendar-alt"></i>
+            </button>
             <button class="edit" data-id="${id}">
                 <i class="fas fa-edit"></i>
             </button>
@@ -494,6 +532,15 @@ document.addEventListener('DOMContentLoaded', () => {
             </button>
                 </div>
             `;
+
+        // Event Listener für den Toggle-Button
+        const toggleBtn = div.querySelector('.toggle-dates-btn');
+        const datesDiv = div.querySelector('.item-dates');
+        toggleBtn.addEventListener('click', () => {
+            datesDiv.classList.toggle('show');
+            toggleBtn.querySelector('i').classList.toggle('fa-calendar-alt');
+            toggleBtn.querySelector('i').classList.toggle('fa-calendar-check');
+        });
 
         // Event Listener für Bearbeiten
         const editBtn = div.querySelector('.edit');
@@ -537,9 +584,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const isAdmin = userEmail === 'guerkan.privat@gmail.com';
         
         if ((pageId === 'nas' || pageId === 'admin') && !isAdmin) {
-            alert('Sie haben keine Berechtigung für diesen Bereich');
-                        return;
-                    }
+            showToast('Sie haben keine Berechtigung für diesen Bereich', 'error');
+            return;
+        }
+
+        // Wenn wir auf einer geschützten Seite sind und keine Berechtigung haben, zur Links-Seite wechseln
+        if (!isAdmin && (pageId === 'nas' || pageId === 'admin')) {
+            window.location.hash = '#links';
+            return;
+        }
 
         window.location.hash = href.substring(1);
 
@@ -553,8 +606,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Admin Panel initialisieren wenn Admin-Seite aktiviert wird
                 if (pageId === 'admin' && isAdmin) {
                     console.log('Admin-Seite aktiviert, initialisiere Panel...');
-                initializeAdminPanel();
+                    initializeAdminPanel();
                 }
+                // Zurück zum Seitenanfang scrollen
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
             } else {
                 page.style.display = 'none';
             }
@@ -610,7 +668,11 @@ document.addEventListener('DOMContentLoaded', () => {
             let hasResults = false;
 
             if (servicesList) {
-                servicesList.innerHTML = '';
+                // Container leeren
+                while (servicesList.firstChild) {
+                    servicesList.removeChild(servicesList.firstChild);
+                }
+                
                 const services = await getServicesFromFirestore();
                 
         services.forEach(service => {
@@ -645,6 +707,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
                             </div>
                             <div class="link-actions">
+                                <button class="toggle-dates-btn" title="Datumsinformationen anzeigen/ausblenden">
+                                    <i class="fas fa-calendar-alt"></i>
+                                </button>
                                 <button class="qr-button" onclick="showQRCode('${service.url}')">
                                     <i class="fas fa-qrcode"></i>
                                 </button>
@@ -653,6 +718,16 @@ document.addEventListener('DOMContentLoaded', () => {
                                 </a>
                 </div>
             `;
+
+                        // Event Listener für den Toggle-Button
+                        const toggleBtn = serviceCard.querySelector('.toggle-dates-btn');
+                        const datesDiv = serviceCard.querySelector('.item-dates');
+                        toggleBtn.addEventListener('click', () => {
+                            datesDiv.classList.toggle('show');
+                            toggleBtn.querySelector('i').classList.toggle('fa-calendar-alt');
+                            toggleBtn.querySelector('i').classList.toggle('fa-calendar-check');
+                        });
+
                         servicesList.appendChild(serviceCard);
                         hasResults = true;
                     }
@@ -864,6 +939,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                 </div>
                 <div class="item-actions">
+                <button class="toggle-dates-btn" title="Datumsinformationen anzeigen/ausblenden">
+                    <i class="fas fa-calendar-alt"></i>
+                </button>
                 <button class="edit" data-id="${id}">
                     <i class="fas fa-edit"></i>
                 </button>
@@ -872,6 +950,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 </button>
                 </div>
             `;
+
+        // Event Listener für den Toggle-Button
+        const toggleBtn = div.querySelector('.toggle-dates-btn');
+        const datesDiv = div.querySelector('.item-dates');
+        toggleBtn.addEventListener('click', () => {
+            datesDiv.classList.toggle('show');
+            toggleBtn.querySelector('i').classList.toggle('fa-calendar-alt');
+            toggleBtn.querySelector('i').classList.toggle('fa-calendar-check');
+        });
 
         // Event Listener für Bearbeiten
         const editBtn = div.querySelector('.edit');
@@ -1042,8 +1129,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     url: document.getElementById('linkUrl').value,
                     iconUrl: document.getElementById('linkIconUrl').value,
                     description: document.getElementById('linkDescription').value,
-                    createdAt: new Date(),
-                    updatedAt: new Date()
+                    createdAt: new Date()
                 };
 
                 try {
@@ -1076,8 +1162,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     url: document.getElementById('serviceUrl').value,
                     iconUrl: document.getElementById('serviceIconUrl').value,
                     description: document.getElementById('serviceDescription').value,
-                    createdAt: new Date(),
-                    updatedAt: new Date()
+                    createdAt: new Date()
                 };
 
                 try {
@@ -1230,6 +1315,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
 
+            // Klick-Event für Suchergebnisse
+            suggestionsContainer.addEventListener('click', (e) => {
+                const suggestionItem = e.target.closest('.suggestion-item');
+                if (suggestionItem) {
+                    const index = parseInt(suggestionItem.getAttribute('data-index'));
+                    const item = suggestionsContainer.filteredItems[index];
+                    if (item) {
+                        window.open(item.url, '_blank');
+                        suggestionsContainer.classList.remove('show');
+                        searchInput.value = '';
+                    }
+                }
+            });
+
             // Schließe Vorschläge beim Klick außerhalb
             document.addEventListener('click', (e) => {
                 if (!searchInput.contains(e.target) && !suggestionsContainer.contains(e.target)) {
@@ -1249,6 +1348,20 @@ document.addEventListener('DOMContentLoaded', () => {
             nasSearchInput.addEventListener('keydown', (e) => {
                 if (suggestionsContainer.classList.contains('show')) {
                     handleKeyboardNavigation(e, suggestionsContainer, nasSearchInput);
+                }
+            });
+
+            // Klick-Event für Suchergebnisse
+            suggestionsContainer.addEventListener('click', (e) => {
+                const suggestionItem = e.target.closest('.suggestion-item');
+                if (suggestionItem) {
+                    const index = parseInt(suggestionItem.getAttribute('data-index'));
+                    const item = suggestionsContainer.filteredItems[index];
+                    if (item) {
+                        window.open(item.url, '_blank');
+                        suggestionsContainer.classList.remove('show');
+                        nasSearchInput.value = '';
+                    }
                 }
             });
 
@@ -1272,23 +1385,57 @@ document.addEventListener('DOMContentLoaded', () => {
         function getBrowserInfo() {
             const userAgent = navigator.userAgent;
             let browserName = "Unbekannt";
-            let browserVersion = "Unbekannt";
-
+            
             if (userAgent.indexOf("Firefox") > -1) {
                 browserName = "Firefox";
-                browserVersion = userAgent.match(/Firefox\/([0-9.]+)/)[1];
-            } else if (userAgent.indexOf("Chrome") > -1) {
-                browserName = "Chrome";
-                browserVersion = userAgent.match(/Chrome\/([0-9.]+)/)[1];
-            } else if (userAgent.indexOf("Safari") > -1) {
-                browserName = "Safari";
-                browserVersion = userAgent.match(/Version\/([0-9.]+)/)[1];
+            } else if (userAgent.indexOf("SamsungBrowser") > -1) {
+                browserName = "Samsung Browser";
+            } else if (userAgent.indexOf("Opera") > -1 || userAgent.indexOf("OPR") > -1) {
+                browserName = "Opera";
+            } else if (userAgent.indexOf("Trident") > -1) {
+                browserName = "Internet Explorer";
             } else if (userAgent.indexOf("Edge") > -1) {
                 browserName = "Edge";
-                browserVersion = userAgent.match(/Edge\/([0-9.]+)/)[1];
+            } else if (userAgent.indexOf("Chrome") > -1) {
+                browserName = "Chrome";
+            } else if (userAgent.indexOf("Safari") > -1) {
+                browserName = "Safari";
             }
+            
+            return browserName;
+        }
 
-            return `${browserName} ${browserVersion}`;
+        function getBrowserVersion() {
+            const userAgent = navigator.userAgent;
+            let version = "Unbekannt";
+            
+            // Chrome
+            if (userAgent.indexOf("Chrome") > -1) {
+                const match = userAgent.match(/Chrome\/(\d+\.\d+\.\d+\.\d+)/);
+                if (match) version = match[1];
+            }
+            // Firefox
+            else if (userAgent.indexOf("Firefox") > -1) {
+                const match = userAgent.match(/Firefox\/(\d+\.\d+)/);
+                if (match) version = match[1];
+            }
+            // Safari
+            else if (userAgent.indexOf("Safari") > -1 && userAgent.indexOf("Chrome") === -1) {
+                const match = userAgent.match(/Version\/(\d+\.\d+\.\d+)/);
+                if (match) version = match[1];
+            }
+            // Edge
+            else if (userAgent.indexOf("Edge") > -1) {
+                const match = userAgent.match(/Edge\/(\d+\.\d+\.\d+\.\d+)/);
+                if (match) version = match[1];
+            }
+            // Opera
+            else if (userAgent.indexOf("Opera") > -1 || userAgent.indexOf("OPR") > -1) {
+                const match = userAgent.match(/(?:Opera|OPR)\/(\d+\.\d+\.\d+)/);
+                if (match) version = match[1];
+            }
+            
+            return version;
         }
 
         function getOSInfo() {
@@ -1315,9 +1462,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         function updateEnvironmentInfo() {
-            document.getElementById('browserInfo').textContent = getBrowserInfo();
-            document.getElementById('osInfo').textContent = getOSInfo();
-            document.getElementById('screenInfo').textContent = getScreenInfo();
+            const browserInfo = document.getElementById('browserInfo');
+            const browserVersionInfo = document.getElementById('browserVersionInfo');
+            const osInfo = document.getElementById('osInfo');
+            const screenInfo = document.getElementById('screenInfo');
+            
+            if (browserInfo) browserInfo.textContent = getBrowserInfo();
+            if (browserVersionInfo) browserVersionInfo.textContent = getBrowserVersion();
+            if (osInfo) osInfo.textContent = getOSInfo();
+            if (screenInfo) screenInfo.textContent = getScreenInfo();
         }
 
         updateEnvironmentInfo();
@@ -1583,8 +1736,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     bugReportCard.remove();
                     console.log(`Bug Report Card mit ID ${id} direkt aus dem DOM entfernt.`);
                 }
-
-                await loadBugReports(); // Bug Reports neu laden nach dem Löschen
             } catch (error) {
                 console.error('Fehler beim Löschen des Bug Reports:', error);
                 showToast('Fehler beim Löschen des Bug Reports: ' + error.message, 'error');
@@ -1595,4 +1746,84 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialisiere Bug Reports Admin beim Laden der Seite
     initializeBugReport();
     initializeBugReportsAdmin();
+
+    // Funktion zum Extrahieren von Metadaten aus einer URL
+    async function extractMetadata(url) {
+        try {
+            // Prüfe, ob die URL gültig ist
+            if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                url = 'https://' + url;
+            }
+
+            // Verwende einen einfachen Proxy-Service
+            const response = await fetch(`https://corsproxy.io/?${encodeURIComponent(url)}`);
+            const html = await response.text();
+            
+            // Erstelle ein temporäres DOM-Element
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            
+            // Extrahiere Metadaten
+            const title = doc.querySelector('title')?.textContent || '';
+            const description = doc.querySelector('meta[name="description"]')?.content || 
+                              doc.querySelector('meta[property="og:description"]')?.content || '';
+            
+            // Suche nach Favicon oder OpenGraph-Bild
+            let iconUrl = '';
+            const ogImage = doc.querySelector('meta[property="og:image"]')?.content;
+            const favicon = doc.querySelector('link[rel="icon"]')?.href || 
+                          doc.querySelector('link[rel="shortcut icon"]')?.href ||
+                          doc.querySelector('link[rel="apple-touch-icon"]')?.href;
+            
+            if (ogImage) {
+                iconUrl = ogImage;
+            } else if (favicon) {
+                iconUrl = new URL(favicon, url).href;
+            }
+
+            return {
+                title: title.trim(),
+                description: description.trim(),
+                iconUrl: iconUrl
+            };
+        } catch (error) {
+            console.error('Fehler beim Extrahieren der Metadaten:', error);
+            throw new Error('Die Metadaten konnten nicht extrahiert werden. Bitte überprüfen Sie die URL.');
+        }
+    }
+
+    // Event Listener für Auto-Fill Buttons
+    document.querySelectorAll('.auto-fill-btn').forEach(button => {
+        button.addEventListener('click', async () => {
+            const formType = button.dataset.form;
+            const urlInput = document.getElementById(`${formType}Url`);
+            const titleInput = document.getElementById(`${formType}Title`);
+            const descriptionInput = document.getElementById(`${formType}Description`);
+            const iconUrlInput = document.getElementById(`${formType}IconUrl`);
+
+            if (!urlInput.value) {
+                showToast('Bitte geben Sie zuerst eine URL ein', 'error');
+                return;
+            }
+
+            try {
+                button.disabled = true;
+                button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Lade...';
+                
+                const metadata = await extractMetadata(urlInput.value);
+                
+                if (metadata.title) titleInput.value = metadata.title;
+                if (metadata.description) descriptionInput.value = metadata.description;
+                if (metadata.iconUrl) iconUrlInput.value = metadata.iconUrl;
+                
+                showToast('Metadaten erfolgreich extrahiert', 'success');
+            } catch (error) {
+                console.error('Fehler:', error);
+                showToast(error.message, 'error');
+            } finally {
+                button.disabled = false;
+                button.innerHTML = '<i class="fas fa-magic"></i> Automatisches hinzufügen';
+            }
+        });
+    });
 }); 
