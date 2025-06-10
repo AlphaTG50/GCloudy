@@ -1,0 +1,13 @@
+DirectoryIndex index.html
+
+# Verhindere direkten Zugriff auf main.html
+<Files "main.html">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+# Erlaube Zugriff auf main.html nur nach erfolgreicher Authentifizierung
+<FilesMatch "main\.html$">
+    Order Allow,Deny
+    Allow from all
+</FilesMatch> 

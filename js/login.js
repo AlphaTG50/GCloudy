@@ -22,7 +22,7 @@ const auth = getAuth(app);
 
 document.addEventListener('DOMContentLoaded', () => {
     const MAX_LOGIN_ATTEMPTS = 3;
-    const COOLDOWN_TIME_SECONDS = 60; // 60 Sekunden (1 Minute)
+    const COOLDOWN_TIME_SECONDS = 60;
 
     const firebaseLoginForm = document.getElementById('firebaseLoginFormFullPage');
     const emailInput = document.getElementById('emailFullPage');
@@ -55,61 +55,75 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     }
+
     updateLoginButtonState();
 
-    firebaseLoginForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
+    if (firebaseLoginForm) {
+        firebaseLoginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            console.log('Login-Versuch gestartet...');
 
-        authErrorMessage.textContent = '';
-        authErrorMessage.style.display = 'none';
+            authErrorMessage.textContent = '';
+            authErrorMessage.style.display = 'none';
 
-        const currentTime = Math.floor(Date.now() / 1000);
-        if (cooldownEndTime > currentTime) {
-            updateLoginButtonState();
-            return;
-        }
+            const currentTime = Math.floor(Date.now() / 1000);
+            if (cooldownEndTime > currentTime) {
+                updateLoginButtonState();
+                return;
+            }
 
-        const email = emailInput.value;
-        const password = passwordInput.value;
+            const email = emailInput.value;
+            const password = passwordInput.value;
 
-        try {
-            await signInWithEmailAndPassword(auth, email, password);
+            try {
+                console.log('Versuche Login mit E-Mail:', email);
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                console.log('Login erfolgreich für:', userCredential.user.email);
+                
+                localStorage.setItem('loggedIn', 'true');
+                localStorage.setItem('userEmail', email);
+                
+                if (email === 'guerkan.privat@gmail.com') {
+                    console.log('Admin-Login erkannt');
+                    localStorage.setItem('adminLoggedIn', 'true');
+                } else {
+                    localStorage.removeItem('adminLoggedIn');
+                }
+                
+                loginAttempts = 0;
+                localStorage.setItem('fullPageLoginAttempts', 0);
+                localStorage.removeItem('fullPageCooldownEndTime');
+                
+                console.log('Weiterleitung zu main.html...');
+                window.location.href = 'main.html';
+            } catch (error) {
+                console.error("Login Fehler:", error);
+                loginAttempts++;
+                localStorage.setItem('fullPageLoginAttempts', loginAttempts);
+
+                if (loginAttempts >= MAX_LOGIN_ATTEMPTS) {
+                    cooldownEndTime = currentTime + COOLDOWN_TIME_SECONDS;
+                    localStorage.setItem('fullPageCooldownEndTime', cooldownEndTime);
+                }
+
+                if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+                    authErrorMessage.textContent = 'Ungültige E-Mail oder falsches Passwort.';
+                } else if (error.code === 'auth/invalid-email') {
+                    authErrorMessage.textContent = 'Die E-Mail-Adresse ist nicht gültig.';
+                } else {
+                    authErrorMessage.textContent = 'Anmeldung fehlgeschlagen. Bitte versuchen Sie es erneut.';
+                }
+                authErrorMessage.style.display = 'block';
+                updateLoginButtonState();
+            }
+        });
+    }
+
+    if (guestLoginBtn) {
+        guestLoginBtn.addEventListener('click', () => {
             localStorage.setItem('loggedIn', 'true');
-            localStorage.setItem('userEmail', email);
-            if (email === 'guerkan.privat@gmail.com') {
-                localStorage.setItem('adminLoggedIn', 'true');
-            } else {
-                localStorage.removeItem('adminLoggedIn');
-            }
-            loginAttempts = 0;
-            localStorage.setItem('fullPageLoginAttempts', 0);
-            localStorage.removeItem('fullPageCooldownEndTime');
-            window.location.href = 'index.html'; // Weiterleitung zur Hauptseite
-        } catch (error) {
-            console.error("Login Error:", error.message);
-            loginAttempts++;
-            localStorage.setItem('fullPageLoginAttempts', loginAttempts);
-
-            if (loginAttempts >= MAX_LOGIN_ATTEMPTS) {
-                cooldownEndTime = currentTime + COOLDOWN_TIME_SECONDS;
-                localStorage.setItem('fullPageCooldownEndTime', cooldownEndTime);
-            }
-
-            if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
-                authErrorMessage.textContent = 'Ungültige E-Mail oder falsches Passwort.';
-            } else if (error.code === 'auth/invalid-email') {
-                authErrorMessage.textContent = 'Die E-Mail-Adresse ist nicht gültig.';
-            } else {
-                authErrorMessage.textContent = 'Anmeldung fehlgeschlagen. Bitte versuchen Sie es erneut.';
-            }
-            authErrorMessage.style.display = 'block';
-            updateLoginButtonState();
-        }
-    });
-
-    guestLoginBtn.addEventListener('click', () => {
-        localStorage.setItem('loggedIn', 'true');
-        localStorage.setItem('userEmail', 'guest');
-        window.location.href = 'index.html';
-    });
+            localStorage.setItem('userEmail', 'guest');
+            window.location.href = 'main.html';
+        });
+    }
 }); 

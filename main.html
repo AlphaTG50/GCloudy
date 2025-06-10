@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GCloudy - Persönlicher Blog</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+</head>
+<body>
+    <!-- Ladebildschirm -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-spinner"></div>
+        <p>Lade...</p>
+    </div>
+
+    <!-- Toast Benachrichtigungen -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Bestätigungsdialog -->
+    <div id="confirmDialog" class="confirm-dialog">
+        <div class="confirm-dialog-content">
+            <h3>Bestätigung</h3>
+            <p id="confirmDialogMessage"></p>
+            <div class="confirm-dialog-buttons">
+                <button id="confirmDialogCancel" class="btn-secondary-new">Abbrechen</button>
+                <button id="confirmDialogConfirm" class="btn-primary-new">Bestätigen</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- QR Code Modal -->
+    <div id="qrModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>QR Code</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="qrCodeContainer"></div>
+                <p id="qrCodeUrl" class="qr-url"></p>
+            </div>
+        </div>
+    </div>
+
+    <div id="appContent" style="display: none;">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <img src="assets/gcloudy.png" alt="GCloudy Logo">
+            </div>
+            <nav class="desktop-nav">
+                <ul>
+                    <li><a href="#links" data-page="links"><i class="fas fa-link"></i> Links</a></li>
+                    <li id="nasNavLinkLi"><a href="#nas" data-page="nas"><i class="fas fa-server"></i> Dienste</a></li>
+                    <li id="adminNavLinkLi"><a href="#admin" data-page="admin"><i class="fas fa-cog"></i> Admin</a></li>
+                    <li><a href="#bug-report" data-page="bug-report"><i class="fas fa-bug"></i> Bugreport</a></li>
+                </ul>
+            </nav>
+            <div class="bottom-section">
+                <button id="themeToggle" aria-label="Theme wechseln">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <a href="https://github.com/AlphaTG50" target="_blank" aria-label="GitHub">
+                    <i class="fab fa-github"></i>
+                </a>
+                <a href="https://discord.com/users/AlphaTG050" target="_blank" aria-label="Discord">
+                    <i class="fab fa-discord"></i>
+                </a>
+                <a href="https://instagram.com/Turkgurkan50" target="_blank" aria-label="Instagram">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="index.html" aria-label="Abmelden">
+                    <i class="fas fa-sign-out-alt"></i>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="content">
+            <!-- Links Page -->
+            <div id="links" class="page">
+                <div class="page-header">
+                    <h2>Unsere Links</h2>
+                    <p>Alle wichtigen Links an einem Ort</p>
+                </div>
+                <div class="search-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="search-input" id="searchInput" placeholder="Links durchsuchen...">
+                </div>
+                <div class="no-results" id="noResults" style="display: none;">
+                    Keine Ergebnisse gefunden
+                </div>
+                <div class="links-list" id="linksList">
+                    <!-- Link Cards werden dynamisch eingefügt -->
+                </div>
+            </div>
+
+            <!-- Dienste Page -->
+            <div id="nas" class="page" style="display: none;">
+                <div class="page-header">
+                    <h2>Meine Dienste</h2>
+                    <p>Alle lokalen Dienste an einem Ort</p>
+                </div>
+                <div class="search-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="search-input" id="nasSearchInput" placeholder="Dienste durchsuchen...">
+                </div>
+                <div class="no-results" id="noNasResults" style="display: none;">
+                    Keine Ergebnisse gefunden
+                </div>
+                <div class="links-list" id="localServicesListContainer">
+                    <!-- Dienst Cards werden dynamisch eingefügt -->
+                </div>
+            </div>
+
+            <!-- Admin Page -->
+            <div id="admin" class="page" style="display: none;">
+                <div class="admin-dashboard-new">
+                    <div class="admin-header-new">
+                        <h2>Admin Dashboard</h2>
+                        <p>Verwalten Sie Ihre Links und Dienste</p>
+                    </div>
+                    <div class="admin-tabs-new">
+                        <button class="tab-button-new active" data-tab="links">Links</button>
+                        <button class="tab-button-new" data-tab="services">Dienste</button>
+                        <button class="tab-button-new" data-tab="bug-reports">Bug Reports</button>
+                    </div>
+                    
+                    <!-- Links Tab -->
+                    <div id="linksTabContent" class="tab-content-new">
+                        <div class="section-card">
+                            <h3>Neuen Link hinzufügen</h3>
+                            <form class="admin-form" id="addLinkForm">
+                                <div class="form-group-new">
+                                    <label for="linkTitle">Titel</label>
+                                    <input type="text" id="linkTitle" name="title" required placeholder="z.B. Youtube">
+                                </div>
+                                <div class="form-group-new">
+                                    <label for="linkUrl">URL</label>
+                                    <input type="url" id="linkUrl" name="url" required placeholder="https://example.com/">
+                                </div>
+                                <div class="form-group-new">
+                                    <label for="linkIconUrl">Icon URL (optional)</label>
+                                    <input type="url" id="linkIconUrl" name="iconUrl" placeholder="https://example.com/icon.png">
+                                </div>
+                                <div class="form-group-new">
+                                    <label for="linkDescription">Beschreibung</label>
+                                    <textarea id="linkDescription" name="description" rows="3" placeholder="Beschreiben Sie den Link..."></textarea>
+                                </div>
+                                <div class="form-buttons">
+                                    <button type="submit" class="btn-primary-new">Link hinzufügen</button>
+                                    <button type="reset" class="btn-secondary-new">Felder leeren</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="section-card">
+                            <h3>Vorhandene Links</h3>
+                            <div class="items-grid-new" id="linksGrid">
+                                <!-- Link Items werden dynamisch eingefügt -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Services Tab -->
+                    <div id="servicesTabContent" class="tab-content-new" style="display: none;">
+                        <div class="section-card">
+                            <h3>Neuen Dienst hinzufügen</h3>
+                            <form class="admin-form" id="addServiceForm">
+                                <div class="form-group-new">
+                                    <label for="serviceTitle">Titel</label>
+                                    <input type="text" id="serviceTitle" name="title" required placeholder="z.B. Synology Drive">
+                                </div>
+                                <div class="form-group-new">
+                                    <label for="serviceUrl">URL</label>
+                                    <input type="url" id="serviceUrl" name="url" required placeholder="https://example.com/">
+                                </div>
+                                <div class="form-group-new">
+                                    <label for="serviceIconUrl">Icon URL (optional)</label>
+                                    <input type="url" id="serviceIconUrl" name="iconUrl" placeholder="https://example.com/icon.png">
+                                </div>
+                                <div class="form-group-new">
+                                    <label for="serviceDescription">Beschreibung</label>
+                                    <textarea id="serviceDescription" name="description" rows="3" placeholder="Beschreiben Sie den Dienst..."></textarea>
+                                </div>
+                                <div class="form-buttons">
+                                    <button type="submit" class="btn-primary-new">Dienst hinzufügen</button>
+                                    <button type="reset" class="btn-secondary-new">Felder leeren</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="section-card">
+                            <h3>Vorhandene Dienste</h3>
+                            <div class="items-grid-new" id="servicesGrid">
+                                <!-- Dienst Items werden dynamisch eingefügt -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bug Report Page -->
+            <div id="bug-report" class="page" style="display: none;">
+                <div class="page-header">
+                    <h2>Bugreport</h2>
+                    <p>Helfen Sie uns, GCloudy zu verbessern</p>
+                </div>
+                <div class="bug-report-container">
+                    <form id="bugReportForm" class="bug-report-form">
+                        <div class="form-group-new">
+                            <label for="bugTitle">Titel des Problems</label>
+                            <input type="text" id="bugTitle" name="title" required placeholder="Kurze Beschreibung des Problems">
+                        </div>
+                        <div class="form-group-new">
+                            <label for="bugDescription">Detaillierte Beschreibung</label>
+                            <textarea id="bugDescription" name="description" rows="4" required placeholder="Beschreiben Sie das Problem so detailliert wie möglich..."></textarea>
+                        </div>
+                        <div class="form-group-new">
+                            <label for="bugSteps">Schritte zum Reproduzieren</label>
+                            <textarea id="bugSteps" name="steps" rows="3" required placeholder="1. Schritt 1&#10;2. Schritt 2&#10;3. Schritt 3"></textarea>
+                        </div>
+                        <div class="form-group-new">
+                            <label for="bugExpected">Erwartetes Verhalten</label>
+                            <textarea id="bugExpected" name="expected" rows="2" required placeholder="Was sollte eigentlich passieren?"></textarea>
+                        </div>
+                        <div class="form-group-new">
+                            <label for="bugActual">Tatsächliches Verhalten</label>
+                            <textarea id="bugActual" name="actual" rows="2" required placeholder="Was passiert stattdessen?"></textarea>
+                        </div>
+                        <div class="form-group-new">
+                            <label for="bugEmail">E-Mail (optional)</label>
+                            <input type="email" id="bugEmail" name="email" placeholder="Ihre E-Mail-Adresse für Rückfragen">
+                            <small class="form-hint">Wir werden Sie nur kontaktieren, wenn wir weitere Informationen benötigen.</small>
+                        </div>
+                        <div class="form-group-new">
+                            <label for="bugPhone">Telefonnummer (optional)</label>
+                            <input type="tel" id="bugPhone" name="phone" placeholder="Ihre Telefonnummer für Rückfragen">
+                            <small class="form-hint">Wir werden Sie nur in dringenden Fällen anrufen.</small>
+                        </div>
+                        <div class="form-group-new">
+                            <label for="bugEnvironment">Umgebung</label>
+                            <div class="environment-info">
+                                <div class="info-item">
+                                    <div class="info-icon">
+                                        <i class="fas fa-globe"></i>
+                                    </div>
+                                    <div class="info-content">
+                                        <div class="info-label">Browser</div>
+                                        <div id="browserInfo" class="info-value"></div>
+                                    </div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-icon">
+                                        <i class="fas fa-desktop"></i>
+                                    </div>
+                                    <div class="info-content">
+                                        <div class="info-label">Betriebssystem</div>
+                                        <div id="osInfo" class="info-value"></div>
+                                    </div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-icon">
+                                        <i class="fas fa-expand"></i>
+                                    </div>
+                                    <div class="info-content">
+                                        <div class="info-label">Bildschirmauflösung</div>
+                                        <div id="screenInfo" class="info-value"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-buttons">
+                            <button type="submit" class="btn-primary-new">Bugreport</button>
+                            <button type="reset" class="btn-secondary-new">Formular zurücksetzen</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+
+        <!-- Mobile Navigation -->
+        <nav class="mobile-nav">
+            <div class="mobile-nav-container">
+                <ul>
+                    <li><a href="#links" data-page="links"><i class="fas fa-link"></i> Links</a></li>
+                    <li id="mobileNasNavLinkLi"><a href="#nas" data-page="nas"><i class="fas fa-server"></i> Dienste</a></li>
+                    <li id="mobileAdminNavLinkLi"><a href="#admin" data-page="admin"><i class="fas fa-cog"></i> Admin</a></li>
+                </ul>
+                <div class="mobile-nav-actions">
+                    <a href="https://github.com/AlphaTG50" target="_blank" class="nav-action-btn" aria-label="GitHub">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="https://discord.com/users/AlphaTG050" target="_blank" class="nav-action-btn" aria-label="Discord">
+                        <i class="fab fa-discord"></i>
+                    </a>
+                    <a href="https://instagram.com/Turkgurkan50" target="_blank" class="nav-action-btn" aria-label="Instagram">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <button class="nav-action-btn" id="mobileThemeToggle" aria-label="Theme wechseln">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <a href="index.html" class="nav-action-btn" aria-label="Abmelden">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <script type="module" src="js/main.js"></script>
+</body>
+</html> 
