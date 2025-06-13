@@ -1081,9 +1081,63 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Admin Panel Funktionen
-    function initializeAdminPanel() {
+    async function initializeAdminPanel() {
         const adminPanel = document.getElementById('admin');
         if (!adminPanel) return;
+
+        // Initialisiere Links und Dienste
+        await loadAdminLinks();
+        await loadAdminServices();
+
+        // Initialisiere automatische Suche
+        document.querySelectorAll('.auto-fill-btn').forEach(button => {
+            button.addEventListener('click', async () => {
+                const formType = button.dataset.form;
+                const urlInput = document.getElementById(`${formType}Url`);
+                const titleInput = document.getElementById(`${formType}Title`);
+                const descriptionInput = document.getElementById(`${formType}Description`);
+                const iconUrlInput = document.getElementById(`${formType}IconUrl`);
+                const iconPreview = document.getElementById(`${formType}IconPreview`);
+                const manufacturerInput = document.getElementById(`${formType}Manufacturer`);
+
+                if (!urlInput.value) {
+                    showToast('Bitte geben Sie zuerst eine URL ein', 'error');
+                    return;
+                }
+
+                try {
+                    button.disabled = true;
+                    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Lade...';
+                    
+                    const metadata = await extractMetadata(urlInput.value);
+                    
+                    if (metadata.title) titleInput.value = metadata.title;
+                    if (metadata.description) descriptionInput.value = metadata.description;
+                    if (metadata.manufacturer) manufacturerInput.value = metadata.manufacturer;
+                    if (metadata.iconUrl) {
+                        iconUrlInput.value = metadata.iconUrl;
+                        // Aktualisiere die Icon-Vorschau
+                        if (iconPreview) {
+                            const img = document.createElement('img');
+                            img.src = metadata.iconUrl;
+                            img.onerror = () => {
+                                iconPreview.innerHTML = `<i class="fas ${formType === 'link' ? 'fa-link' : 'fa-server'}"></i>`;
+                            };
+                            iconPreview.innerHTML = '';
+                            iconPreview.appendChild(img);
+                        }
+                    }
+                    
+                    showToast('Metadaten erfolgreich extrahiert', 'success');
+                } catch (error) {
+                    console.error('Fehler:', error);
+                    showToast(error.message, 'error');
+                } finally {
+                    button.disabled = false;
+                    button.innerHTML = '<i class="fas fa-magic"></i> Automatische Suche';
+                }
+            });
+        });
 
         function updateIconPreview(input, preview, defaultIcon) {
             const url = input.value.trim();
@@ -1887,8 +1941,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 url = 'https://' + url;
             }
 
-            // Verwende einen einfachen Proxy-Service
-            const response = await fetch(`https://corsproxy.io/?${encodeURIComponent(url)}`);
+            // Verwende einen anderen Proxy-Service
+            const response = await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`);
             const html = await response.text();
             
             // Erstelle ein temporäres DOM-Element

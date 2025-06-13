@@ -490,7 +490,6 @@ body {
 
 .form-group-new label {
     display: block;
-    margin-bottom: 0.5rem;
     font-weight: 500;
     color: var(--text-primary);
 }
