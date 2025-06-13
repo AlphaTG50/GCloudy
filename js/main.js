@@ -163,9 +163,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 links.forEach(link => {
                     const title = (link.title || '').toLowerCase();
                     const description = (link.description || '').toLowerCase();
+                    const manufacturer = (link.manufacturer || '').toLowerCase();
                     const searchTerm = filterTerm.toLowerCase();
 
-                    if (title.includes(searchTerm) || description.includes(searchTerm)) {
+                    if (title.includes(searchTerm) || description.includes(searchTerm) || manufacturer.includes(searchTerm)) {
                         const linkCard = document.createElement('div');
                         linkCard.classList.add('link-card');
                         
@@ -185,6 +186,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             </div>
                             <div class="link-content">
                                 <h3>${link.title || 'Kein Titel'}</h3>
+                                ${link.manufacturer ? `<p class="manufacturer">${link.manufacturer}</p>` : ''}
                                 <p>${link.description || 'Keine Beschreibung verfügbar.'}</p>
                                 <div class="item-dates">
                                     <p class="date-info"><i class="fas fa-calendar-plus"></i> Erstellt: ${createdAt}</p>
@@ -212,7 +214,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             toggleBtn.querySelector('i').classList.toggle('fa-calendar-alt');
                             toggleBtn.querySelector('i').classList.toggle('fa-calendar-check');
                         });
-
+                        
                         linksList.appendChild(linkCard);
                         hasResults = true;
                     }
@@ -380,6 +382,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('linkUrl').value = link.url || '';
         document.getElementById('linkDescription').value = link.description || '';
         document.getElementById('linkIconUrl').value = link.iconUrl || '';
+        document.getElementById('linkManufacturer').value = link.manufacturer || '';
 
         // Submit-Button Text ändern
         const submitButton = document.querySelector('#addLinkForm button[type="submit"]');
@@ -402,6 +405,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const newUrl = document.getElementById('linkUrl').value;
             const newDescription = document.getElementById('linkDescription').value;
             const newIconUrl = document.getElementById('linkIconUrl').value;
+            const newManufacturer = document.getElementById('linkManufacturer').value;
 
             if (!newTitle || !newUrl) {
                 showToast('Bitte füllen Sie mindestens Titel und URL aus', 'error');
@@ -415,6 +419,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     url: newUrl,
                     description: newDescription,
                     iconUrl: newIconUrl,
+                    manufacturer: newManufacturer,
                     updatedAt: new Date()
                 });
 
@@ -495,8 +500,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const div = document.createElement('div');
         div.className = 'item-card-new';
         
-            let iconHtml = '';
-            if (link.iconUrl) {
+        let iconHtml = '';
+        if (link.iconUrl) {
             iconHtml = `<img src="${link.iconUrl}" alt="Link Icon" class="link-icon-img" onerror="this.onerror=null; this.parentElement.innerHTML='<i class=\'fas fa-link\'></i>';"></img>`;
         } else {
             iconHtml = `<i class="fas fa-link"></i>`;
@@ -506,32 +511,33 @@ document.addEventListener('DOMContentLoaded', () => {
         const createdAt = link.createdAt ? new Date(link.createdAt.toDate()).toLocaleString('de-DE') : 'Unbekannt';
         const updatedAt = link.updatedAt ? new Date(link.updatedAt.toDate()).toLocaleString('de-DE') : null;
 
-            div.innerHTML = `
-                <div class="item-icon">
-                    ${iconHtml}
-                </div>
-                <div class="item-content-text">
-            <h4>${link.title || 'Kein Titel'}</h4>
-            <p>${link.description || 'Keine Beschreibung'}</p>
-            <a href="${link.url}" target="_blank" class="link-url">${link.url}</a>
-            ${link.iconUrl ? `<p class="icon-url">Icon URL: ${link.iconUrl}</p>` : ''}
-            <div class="item-dates">
-                <p class="date-info"><i class="fas fa-calendar-plus"></i> Erstellt: ${createdAt}</p>
-                ${updatedAt ? `<p class="date-info"><i class="fas fa-clock"></i> Geändert: ${updatedAt}</p>` : ''}
+        div.innerHTML = `
+            <div class="item-icon">
+                ${iconHtml}
             </div>
+            <div class="item-content-text">
+                <h4>${link.title || 'Kein Titel'}</h4>
+                ${link.manufacturer ? `<p class="manufacturer">${link.manufacturer}</p>` : ''}
+                <p>${link.description || 'Keine Beschreibung'}</p>
+                <a href="${link.url}" target="_blank" class="link-url">${link.url}</a>
+                ${link.iconUrl ? `<p class="icon-url">Icon URL: ${link.iconUrl}</p>` : ''}
+                <div class="item-dates">
+                    <p class="date-info"><i class="fas fa-calendar-plus"></i> Erstellt: ${createdAt}</p>
+                    ${updatedAt ? `<p class="date-info"><i class="fas fa-clock"></i> Geändert: ${updatedAt}</p>` : ''}
                 </div>
-                <div class="item-actions">
-            <button class="toggle-dates-btn" title="Datumsinformationen anzeigen/ausblenden">
-                <i class="fas fa-calendar-alt"></i>
-            </button>
-            <button class="edit" data-id="${id}">
-                <i class="fas fa-edit"></i>
-            </button>
-            <button class="delete-new" data-id="${id}">
-                <i class="fas fa-trash"></i>
-            </button>
-                </div>
-            `;
+            </div>
+            <div class="item-actions">
+                <button class="toggle-dates-btn" title="Datumsinformationen anzeigen/ausblenden">
+                    <i class="fas fa-calendar-alt"></i>
+                </button>
+                <button class="edit" data-id="${id}">
+                    <i class="fas fa-edit"></i>
+                </button>
+                <button class="delete-new" data-id="${id}">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        `;
 
         // Event Listener für den Toggle-Button
         const toggleBtn = div.querySelector('.toggle-dates-btn');
@@ -660,7 +666,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Funktion zum Rendern der Dienste
     async function renderServices(filterTerm = '') {
         try {
             const servicesList = document.getElementById('localServicesListContainer');
@@ -675,19 +680,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 const services = await getServicesFromFirestore();
                 
-        services.forEach(service => {
+                services.forEach(service => {
                     const title = (service.title || '').toLowerCase();
                     const description = (service.description || '').toLowerCase();
+                    const manufacturer = (service.manufacturer || '').toLowerCase();
                     const searchTerm = filterTerm.toLowerCase();
 
-                    if (title.includes(searchTerm) || description.includes(searchTerm)) {
+                    if (title.includes(searchTerm) || description.includes(searchTerm) || manufacturer.includes(searchTerm)) {
                         const serviceCard = document.createElement('div');
                         serviceCard.classList.add('link-card');
                         
-            let iconHtml = '';
-            if (service.iconUrl) {
+                        let iconHtml = '';
+                        if (service.iconUrl) {
                             iconHtml = `<img src="${service.iconUrl}" alt="Service Icon" class="link-logo-img" onerror="this.onerror=null; this.parentElement.innerHTML='<i class=\'fas fa-server\'></i>';"></img>`;
-            } else {
+                        } else {
                             iconHtml = `<i class="fas fa-server"></i>`;
                         }
                         
@@ -696,15 +702,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
                         serviceCard.innerHTML = `
                             <div class="link-logo">
-                    ${iconHtml}
-                </div>
+                                ${iconHtml}
+                            </div>
                             <div class="link-content">
                                 <h3>${service.title || 'Kein Titel'}</h3>
+                                ${service.manufacturer ? `<p class="manufacturer">${service.manufacturer}</p>` : ''}
                                 <p>${service.description || 'Keine Beschreibung verfügbar.'}</p>
                                 <div class="item-dates">
                                     <p class="date-info"><i class="fas fa-calendar-plus"></i> Erstellt: ${createdAt}</p>
                                     ${updatedAt ? `<p class="date-info"><i class="fas fa-clock"></i> Geändert: ${updatedAt}</p>` : ''}
-                </div>
+                                </div>
                             </div>
                             <div class="link-actions">
                                 <button class="toggle-dates-btn" title="Datumsinformationen anzeigen/ausblenden">
@@ -716,8 +723,8 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <a href="${service.url}" target="_blank" rel="noopener noreferrer">
                                     <i class="fas fa-external-link-alt"></i>
                                 </a>
-                </div>
-            `;
+                            </div>
+                        `;
 
                         // Event Listener für den Toggle-Button
                         const toggleBtn = serviceCard.querySelector('.toggle-dates-btn');
@@ -727,7 +734,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             toggleBtn.querySelector('i').classList.toggle('fa-calendar-alt');
                             toggleBtn.querySelector('i').classList.toggle('fa-calendar-check');
                         });
-
+                        
                         servicesList.appendChild(serviceCard);
                         hasResults = true;
                     }
@@ -913,10 +920,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const div = document.createElement('div');
         div.className = 'item-card-new';
         
-            let iconHtml = '';
-                if (service.iconUrl) {
+        let iconHtml = '';
+        if (service.iconUrl) {
             iconHtml = `<img src="${service.iconUrl}" alt="Service Icon" class="link-icon-img" onerror="this.onerror=null; this.parentElement.innerHTML='<i class=\'fas fa-server\'></i>';"></img>`;
-            } else {
+        } else {
             iconHtml = `<i class="fas fa-server"></i>`;
         }
 
@@ -924,21 +931,22 @@ document.addEventListener('DOMContentLoaded', () => {
         const createdAt = service.createdAt ? new Date(service.createdAt.toDate()).toLocaleString('de-DE') : 'Unbekannt';
         const updatedAt = service.updatedAt ? new Date(service.updatedAt.toDate()).toLocaleString('de-DE') : null;
 
-            div.innerHTML = `
-                <div class="item-icon">
-                    ${iconHtml}
-                </div>
-                <div class="item-content-text">
+        div.innerHTML = `
+            <div class="item-icon">
+                ${iconHtml}
+            </div>
+            <div class="item-content-text">
                 <h4>${service.title || 'Kein Titel'}</h4>
+                ${service.manufacturer ? `<p class="manufacturer">${service.manufacturer}</p>` : ''}
                 <p>${service.description || 'Keine Beschreibung'}</p>
                 <a href="${service.url}" target="_blank" class="link-url">${service.url}</a>
                 ${service.iconUrl ? `<p class="icon-url">Icon URL: ${service.iconUrl}</p>` : ''}
                 <div class="item-dates">
                     <p class="date-info"><i class="fas fa-calendar-plus"></i> Erstellt: ${createdAt}</p>
                     ${updatedAt ? `<p class="date-info"><i class="fas fa-clock"></i> Geändert: ${updatedAt}</p>` : ''}
-                        </div>
                 </div>
-                <div class="item-actions">
+            </div>
+            <div class="item-actions">
                 <button class="toggle-dates-btn" title="Datumsinformationen anzeigen/ausblenden">
                     <i class="fas fa-calendar-alt"></i>
                 </button>
@@ -948,8 +956,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 <button class="delete-new" data-id="${id}">
                     <i class="fas fa-trash"></i>
                 </button>
-                </div>
-            `;
+            </div>
+        `;
 
         // Event Listener für den Toggle-Button
         const toggleBtn = div.querySelector('.toggle-dates-btn');
@@ -978,6 +986,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('serviceUrl').value = service.url || '';
         document.getElementById('serviceDescription').value = service.description || '';
         document.getElementById('serviceIconUrl').value = service.iconUrl || '';
+        document.getElementById('serviceManufacturer').value = service.manufacturer || '';
 
         // Submit-Button Text ändern
         const submitButton = document.querySelector('#addServiceForm button[type="submit"]');
@@ -1000,6 +1009,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const newUrl = document.getElementById('serviceUrl').value;
             const newDescription = document.getElementById('serviceDescription').value;
             const newIconUrl = document.getElementById('serviceIconUrl').value;
+            const newManufacturer = document.getElementById('serviceManufacturer').value;
 
             if (!newTitle || !newUrl) {
                 showToast('Bitte füllen Sie mindestens Titel und URL aus', 'error');
@@ -1013,6 +1023,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     url: newUrl,
                     description: newDescription,
                     iconUrl: newIconUrl,
+                    manufacturer: newManufacturer,
                     updatedAt: new Date()
                 });
 
@@ -1076,6 +1087,49 @@ document.addEventListener('DOMContentLoaded', () => {
         const addLinkForm = document.getElementById('addLinkForm');
         const addServiceForm = document.getElementById('addServiceForm');
 
+        // Icon Preview Handler
+        const linkIconInput = document.getElementById('linkIconUrl');
+        const linkIconPreview = document.getElementById('linkIconPreview');
+        const serviceIconInput = document.getElementById('serviceIconUrl');
+        const serviceIconPreview = document.getElementById('serviceIconPreview');
+
+        function updateIconPreview(input, preview, defaultIcon) {
+            const url = input.value.trim();
+            if (url) {
+                const img = document.createElement('img');
+                img.src = url;
+                img.onerror = () => {
+                    preview.innerHTML = `<i class="fas ${defaultIcon}"></i>`;
+                };
+                preview.innerHTML = '';
+                preview.appendChild(img);
+            } else {
+                preview.innerHTML = `<i class="fas ${defaultIcon}"></i>`;
+            }
+        }
+
+        // Initialisiere Icon-Vorschau für Links
+        if (linkIconInput && linkIconPreview) {
+            // Initiale Vorschau setzen
+            updateIconPreview(linkIconInput, linkIconPreview, 'fa-link');
+            
+            // Event Listener für Änderungen
+            linkIconInput.addEventListener('input', () => {
+                updateIconPreview(linkIconInput, linkIconPreview, 'fa-link');
+            });
+        }
+
+        // Initialisiere Icon-Vorschau für Dienste
+        if (serviceIconInput && serviceIconPreview) {
+            // Initiale Vorschau setzen
+            updateIconPreview(serviceIconInput, serviceIconPreview, 'fa-server');
+            
+            // Event Listener für Änderungen
+            serviceIconInput.addEventListener('input', () => {
+                updateIconPreview(serviceIconInput, serviceIconPreview, 'fa-server');
+            });
+        }
+
         function switchTab(activeTab) {
             // Tab-Buttons aktualisieren
             tabButtons.forEach(button => {
@@ -1129,6 +1183,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     url: document.getElementById('linkUrl').value,
                     iconUrl: document.getElementById('linkIconUrl').value,
                     description: document.getElementById('linkDescription').value,
+                    manufacturer: document.getElementById('linkManufacturer').value,
                     createdAt: new Date()
                 };
 
@@ -1162,6 +1217,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     url: document.getElementById('serviceUrl').value,
                     iconUrl: document.getElementById('serviceIconUrl').value,
                     description: document.getElementById('serviceDescription').value,
+                    manufacturer: document.getElementById('serviceManufacturer').value,
                     createdAt: new Date()
                 };
 
@@ -1781,10 +1837,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 iconUrl = new URL(favicon, url).href;
             }
 
+            // Extrahiere den Hersteller aus der Domain
+            const domain = new URL(url).hostname;
+            // Entferne www. und .com/.de/etc. und nehme den ersten Teil
+            const manufacturer = domain
+                .replace(/^www\./, '')
+                .split('.')[0]
+                .split('-')
+                .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                .join(' ');
+
             return {
                 title: title.trim(),
                 description: description.trim(),
-                iconUrl: iconUrl
+                iconUrl: iconUrl,
+                manufacturer: manufacturer
             };
         } catch (error) {
             console.error('Fehler beim Extrahieren der Metadaten:', error);
@@ -1800,6 +1867,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const titleInput = document.getElementById(`${formType}Title`);
             const descriptionInput = document.getElementById(`${formType}Description`);
             const iconUrlInput = document.getElementById(`${formType}IconUrl`);
+            const iconPreview = document.getElementById(`${formType}IconPreview`);
+            const manufacturerInput = document.getElementById(`${formType}Manufacturer`);
 
             if (!urlInput.value) {
                 showToast('Bitte geben Sie zuerst eine URL ein', 'error');
@@ -1814,7 +1883,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 if (metadata.title) titleInput.value = metadata.title;
                 if (metadata.description) descriptionInput.value = metadata.description;
-                if (metadata.iconUrl) iconUrlInput.value = metadata.iconUrl;
+                if (metadata.manufacturer) manufacturerInput.value = metadata.manufacturer;
+                if (metadata.iconUrl) {
+                    iconUrlInput.value = metadata.iconUrl;
+                    // Aktualisiere die Icon-Vorschau
+                    if (iconPreview) {
+                        const img = document.createElement('img');
+                        img.src = metadata.iconUrl;
+                        img.onerror = () => {
+                            iconPreview.innerHTML = `<i class="fas ${formType === 'link' ? 'fa-link' : 'fa-server'}"></i>`;
+                        };
+                        iconPreview.innerHTML = '';
+                        iconPreview.appendChild(img);
+                    }
+                }
                 
                 showToast('Metadaten erfolgreich extrahiert', 'success');
             } catch (error) {
@@ -1822,7 +1904,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 showToast(error.message, 'error');
             } finally {
                 button.disabled = false;
-                button.innerHTML = '<i class="fas fa-magic"></i> Automatisches hinzufügen';
+                button.innerHTML = '<i class="fas fa-magic"></i> Automatische Suche';
             }
         });
     });

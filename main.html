@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GCloudy</title>
-    <meta name="description" content="Ihr persönlicher IT-Helfer">    <meta name="theme-color" content="#4a90e2">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="description" content="Ihr persönlicher IT-Helfer">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -14,9 +12,6 @@
     <link rel="icon" type="image/png" href="assets/favicon/favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="assets/favicon/favicon.svg" />
     <link rel="shortcut icon" href="assets/favicon/favicon.ico" />
-    <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png" />
-    <meta name="apple-mobile-web-app-title" content="GCloudy" />
-    <link rel="manifest" href="/site.webmanifest" />
 </head>
 <body>
     <!-- Ladebildschirm -->
@@ -65,7 +60,7 @@
                     <li><a href="#links" data-page="links"><i class="fas fa-link"></i> Links</a></li>
                     <li id="nasNavLinkLi"><a href="#nas" data-page="nas"><i class="fas fa-server"></i> Dienste</a></li>
                     <li id="adminNavLinkLi"><a href="#admin" data-page="admin"><i class="fas fa-cog"></i> Admin</a></li>
-                    <li><a href="#bug-report" data-page="bug-report"><i class="fas fa-bug"></i> Bug melden</a></li>
+                    <li><a href="#bug-report" data-page="bug-report"><i class="fas fa-comment-dots"></i> Feedback-Center</a></li>
                 </ul>
             </nav>
             <div class="bottom-section">
@@ -135,7 +130,6 @@
                     <div class="admin-tabs-new">
                         <button class="tab-button-new active" data-tab="links">Links</button>
                         <button class="tab-button-new" data-tab="services">Dienste</button>
-                        <button class="tab-button-new" data-tab="bug-reports">Bug Reports</button>
                     </div>
                     
                     <!-- Links Tab -->
@@ -148,6 +142,10 @@
                                     <input type="text" id="linkTitle" name="title" required placeholder="z.B. Youtube">
                                 </div>
                                 <div class="form-group-new">
+                                    <label for="linkManufacturer">Hersteller</label>
+                                    <input type="text" id="linkManufacturer" name="manufacturer" placeholder="z.B. Google">
+                                </div>
+                                <div class="form-group-new">
                                     <label for="linkUrl" class="required">URL</label>
                                     <div class="url-input-group">
                                         <input type="url" id="linkUrl" name="url" required placeholder="https://example.com/">
@@ -158,7 +156,12 @@
                                 </div>
                                 <div class="form-group-new">
                                     <label for="linkIconUrl">Icon URL</label>
-                                    <input type="url" id="linkIconUrl" name="iconUrl" placeholder="https://example.com/icon.png">
+                                    <div class="icon-preview-container">
+                                        <input type="url" id="linkIconUrl" name="iconUrl" placeholder="https://example.com/icon.png">
+                                        <div class="icon-preview" id="linkIconPreview">
+                                            <i class="fas fa-link"></i>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="form-group-new">
                                     <label for="linkDescription">Beschreibung</label>
@@ -188,6 +191,10 @@
                                     <input type="text" id="serviceTitle" name="title" required placeholder="z.B. Synology Drive">
                                 </div>
                                 <div class="form-group-new">
+                                    <label for="serviceManufacturer">Hersteller</label>
+                                    <input type="text" id="serviceManufacturer" name="manufacturer" placeholder="z.B. Synology">
+                                </div>
+                                <div class="form-group-new">
                                     <label for="serviceUrl" class="required">URL</label>
                                     <div class="url-input-group">
                                         <input type="url" id="serviceUrl" name="url" required placeholder="https://example.com/">
@@ -198,7 +205,12 @@
                                 </div>
                                 <div class="form-group-new">
                                     <label for="serviceIconUrl">Icon URL</label>
-                                    <input type="url" id="serviceIconUrl" name="iconUrl" placeholder="https://example.com/icon.png">
+                                    <div class="icon-preview-container">
+                                        <input type="url" id="serviceIconUrl" name="iconUrl" placeholder="https://example.com/icon.png">
+                                        <div class="icon-preview" id="serviceIconPreview">
+                                            <i class="fas fa-server"></i>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="form-group-new">
                                     <label for="serviceDescription">Beschreibung</label>
@@ -217,80 +229,62 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- Bug Reports Tab -->
-                    <div id="bug-reportsTabContent" class="tab-content-new" style="display: none;">
-                        <div class="section-card">
-                            <h3>Bug Reports</h3>
-                            <div class="bug-reports-filters">
-                                <div class="filter-group">
-                                    <label for="statusFilter">Status:</label>
-                                    <select id="statusFilter" class="filter-select">
-                                        <option value="all">Alle</option>
-                                        <option value="new">Neu</option>
-                                        <option value="in-progress">In Bearbeitung</option>
-                                        <option value="resolved">Gelöst</option>
-                                        <option value="closed">Geschlossen</option>
-                                    </select>
-                                </div>
-                                <div class="filter-group">
-                                    <label for="priorityFilter">Priorität:</label>
-                                    <select id="priorityFilter" class="filter-select">
-                                        <option value="all">Alle</option>
-                                        <option value="low">Niedrig</option>
-                                        <option value="medium">Mittel</option>
-                                        <option value="high">Hoch</option>
-                                        <option value="critical">Kritisch</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div id="bugReportsList" class="bug-reports-list">
-                                <!-- Bug Reports werden hier dynamisch eingefügt -->
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
 
             <!-- Bug Report Page -->
             <div id="bug-report" class="page" style="display: none;">
                 <div class="page-header">
-                    <h2>Bug melden</h2>
+                    <h2>Feedback-Center</h2>
                     <p>Helfen Sie uns, GCloudy zu verbessern</p>
                 </div>
                 <div class="bug-report-container">
                     <div class="section-card">
-                        <h3>Bug Report Formular</h3>
+                        <h3>Formular</h3>
                         <form id="bugReportForm" class="bug-report-form">
                             <div class="form-group-new">
-                                <label for="bugTitle" class="required">Titel des Problems</label>
-                                <input type="text" id="bugTitle" name="title" required placeholder="Kurze Beschreibung des Problems">
+                                <label for="bugTitle" class="required">Titel des Feedbacks</label>
+                                <input type="text" id="bugTitle" name="title" required placeholder="Kurze Beschreibung">
+                            </div>
+                            <div class="form-group-new">
+                                <label for="bugLabel" class="required">Art der Meldung</label>
+                                <select id="bugLabel" name="label" required>
+                                    <option value="feature">Feature-Wunsch</option>
+                                    <option value="fehler">Fehler / Bug</option>
+                                    <option value="anpassung">Verbesserung</option>
+                                </select>
+                            </div>
+                            <div class="form-group-new">
+                                <label for="bugPriority" class="required">Priorität</label>
+                                <select id="bugPriority" name="priority" required>
+                                    <option value="niedrig">Niedrig</option>
+                                    <option value="mittel">Mittel</option>
+                                    <option value="hoch">Hoch</option>
+                                </select>
                             </div>
                             <div class="form-group-new">
                                 <label for="bugDescription" class="required">Detaillierte Beschreibung</label>
-                                <textarea id="bugDescription" name="description" rows="4" required placeholder="Beschreiben Sie das Problem so detailliert wie möglich..."></textarea>
+                                <textarea id="bugDescription" name="description" rows="4" required placeholder="Beschreiben Sie Ihr Feedback so detailliert wie möglich..."></textarea>
                             </div>
-                            <div class="form-group-new">
+                            <div class="form-group-new bug-fields" style="display: none;">
                                 <label for="bugSteps">Schritte zum Reproduzieren</label>
-                                <textarea id="bugSteps" name="steps" rows="3" placeholder="Öffne Startseite...&#10;Klicke Login...&#10;Gebe E-Mail ein..."></textarea>
+                                <textarea id="bugSteps" name="steps" rows="3" placeholder="Öffne Startseite → Klicke auf ... → Ergebnis ..."></textarea>
                             </div>
-                            <div class="form-group-new">
+                            <div class="form-group-new bug-fields" style="display: none;">
                                 <label for="bugExpected">Erwartetes Verhalten</label>
-                                <textarea id="bugExpected" name="expected" rows="2" placeholder="Was sollte eigentlich passieren?"></textarea>
+                                <textarea id="bugExpected" name="expected" rows="2" placeholder="Was hätte passieren sollen?"></textarea>
                             </div>
-                            <div class="form-group-new">
+                            <div class="form-group-new bug-fields" style="display: none;">
                                 <label for="bugActual">Tatsächliches Verhalten</label>
-                                <textarea id="bugActual" name="actual" rows="2" placeholder="Was passiert stattdessen?"></textarea>
+                                <textarea id="bugActual" name="actual" rows="2" placeholder="Was ist stattdessen passiert?"></textarea>
                             </div>
                             <div class="form-group-new">
                                 <label for="bugEmail">E-Mail</label>
-                                <input type="email" id="bugEmail" name="email" placeholder="Ihre E-Mail-Adresse für Rückfragen">
-                                <small class="form-hint">Wir werden Sie nur kontaktieren, wenn wir weitere Informationen benötigen.</small>
+                                <input type="email" id="bugEmail" name="email" placeholder="Deine E-Mail für Rückfragen">
                             </div>
                             <div class="form-group-new">
                                 <label for="bugPhone">Telefonnummer</label>
-                                <input type="tel" id="bugPhone" name="phone" placeholder="Ihre Telefonnummer für Rückfragen">
-                                <small class="form-hint">Wir werden Sie nur in dringenden Fällen anrufen.</small>
+                                <input type="tel" id="bugPhone" name="phone" placeholder="Nur bei dringendem Rückrufwunsch">
                             </div>
                             <div class="form-group-new">
                                 <label for="bugEnvironment">Umgebung</label>
@@ -334,7 +328,7 @@
                                 </div>
                             </div>
                             <div class="form-buttons">
-                                <button type="submit" class="btn-primary-new">Bug melden</button>
+                                <button type="submit" class="btn-primary-new">Feedback senden</button>
                                 <button type="reset" class="btn-secondary-new">Formular zurücksetzen</button>
                             </div>
                         </form>
@@ -350,7 +344,7 @@
                     <li><a href="#links" data-page="links"><i class="fas fa-link"></i> Links</a></li>
                     <li id="mobileNasNavLinkLi"><a href="#nas" data-page="nas"><i class="fas fa-server"></i> Dienste</a></li>
                     <li id="mobileAdminNavLinkLi"><a href="#admin" data-page="admin"><i class="fas fa-cog"></i> Admin</a></li>
-                    <li><a href="#bug-report" data-page="bug-report"><i class="fas fa-bug"></i> Bug melden</a></li>
+                    <li><a href="#bug-report" data-page="bug-report"><i class="fas fa-bug"></i> Feedback-Center</a></li>
                 </ul>
                 <div class="mobile-nav-actions">
                     <a href="https://github.com/AlphaTG50" target="_blank" class="nav-action-btn" aria-label="GitHub">
@@ -379,17 +373,5 @@
     </button>
 
     <script type="module" src="js/main.js"></script>
-    <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', async () => {
-                try {
-                    const registration = await navigator.serviceWorker.register('/sw.js');
-                    console.log('ServiceWorker registration successful with scope: ', registration.scope);
-                } catch (error) {
-                    console.error('ServiceWorker registration failed: ', error);
-                }
-            });
-        }
-    </script>
 </body>
 </html> 
