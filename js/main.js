@@ -1082,16 +1082,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Admin Panel Funktionen
     function initializeAdminPanel() {
-        const tabButtons = document.querySelectorAll('.tab-button-new');
-        const tabContents = document.querySelectorAll('.tab-content-new');
-        const addLinkForm = document.getElementById('addLinkForm');
-        const addServiceForm = document.getElementById('addServiceForm');
-
-        // Icon Preview Handler
-        const linkIconInput = document.getElementById('linkIconUrl');
-        const linkIconPreview = document.getElementById('linkIconPreview');
-        const serviceIconInput = document.getElementById('serviceIconUrl');
-        const serviceIconPreview = document.getElementById('serviceIconPreview');
+        const adminPanel = document.getElementById('admin');
+        if (!adminPanel) return;
 
         function updateIconPreview(input, preview, defaultIcon) {
             const url = input.value.trim();
@@ -1109,6 +1101,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Initialisiere Icon-Vorschau für Links
+        const linkIconInput = document.getElementById('linkIconUrl');
+        const linkIconPreview = document.getElementById('linkIconPreview');
         if (linkIconInput && linkIconPreview) {
             // Initiale Vorschau setzen
             updateIconPreview(linkIconInput, linkIconPreview, 'fa-link');
@@ -1120,6 +1114,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Initialisiere Icon-Vorschau für Dienste
+        const serviceIconInput = document.getElementById('serviceIconUrl');
+        const serviceIconPreview = document.getElementById('serviceIconPreview');
         if (serviceIconInput && serviceIconPreview) {
             // Initiale Vorschau setzen
             updateIconPreview(serviceIconInput, serviceIconPreview, 'fa-server');
@@ -1131,45 +1127,36 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         function switchTab(activeTab) {
-            // Tab-Buttons aktualisieren
-            tabButtons.forEach(button => {
-                if (button.dataset.tab === activeTab) {
-                    button.classList.add('active');
+            const tabs = document.querySelectorAll('.tab-button-new');
+            const contents = document.querySelectorAll('.tab-content-new');
+
+            tabs.forEach(tab => {
+                if (tab.dataset.tab === activeTab) {
+                    tab.classList.add('active');
                 } else {
-                    button.classList.remove('active');
+                    tab.classList.remove('active');
                 }
             });
 
-            // Tab-Inhalte aktualisieren
-            tabContents.forEach(content => {
+            contents.forEach(content => {
                 if (content.id === `${activeTab}TabContent`) {
                     content.style.display = 'block';
-                    // Initialisiere den entsprechenden Tab-Inhalt
-                    if (activeTab === 'links') {
-                        loadAdminLinks();
-                    } else if (activeTab === 'services') {
-                        loadAdminServices();
-                    } else if (activeTab === 'bug-reports') {
-                        initializeBugReportsAdmin();
-                    }
                 } else {
                     content.style.display = 'none';
                 }
             });
         }
 
-        // Event-Listener für Tab-Buttons
+        // Event Listener für Tab-Buttons
+        const tabButtons = document.querySelectorAll('.tab-button-new');
         tabButtons.forEach(button => {
             button.addEventListener('click', () => {
                 switchTab(button.dataset.tab);
             });
         });
 
-        // Initialisiere den aktiven Tab
-        const activeTab = document.querySelector('.tab-button-new.active').dataset.tab;
-        switchTab(activeTab);
-
         // Link Form Handler
+        const addLinkForm = document.getElementById('addLinkForm');
         if (addLinkForm) {
             // Alten Event Listener entfernen, falls vorhanden
             if (addLinkForm.submitHandler) {
@@ -1204,6 +1191,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Service Form Handler
+        const addServiceForm = document.getElementById('addServiceForm');
         if (addServiceForm) {
             // Alten Event Listener entfernen, falls vorhanden
             if (addServiceForm.submitHandler) {
@@ -1434,9 +1422,97 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeSearch();
 
     // Bug Report Funktionalität
+    async function getGitHubToken() {
+        try {
+            const configRef = doc(db, "config", "github");
+            const configDoc = await getDoc(configRef);
+            
+            if (!configDoc.exists()) {
+                throw new Error('GitHub Konfiguration nicht gefunden');
+            }
+            
+            return configDoc.data().token;
+        } catch (error) {
+            console.error('Fehler beim Abrufen des GitHub Tokens:', error);
+            throw error;
+        }
+    }
+
+    async function createGitHubIssue(bugReport) {
+        try {
+            const token = await getGitHubToken();
+            if (!token) {
+                throw new Error('GitHub Token nicht verfügbar');
+            }
+
+            const REPO_OWNER = 'AlphaTG50';
+            const REPO_NAME = 'GCloudy';
+
+            // Label-Mapping
+            const labelMapping = {
+                'feature': 'Feature',
+                'fehler': 'Bug',
+                'anpassung': 'Improvement'
+            };
+
+            const priorityMapping = {
+                'niedrig': 'Low',
+                'mittel': 'Medium',
+                'hoch': 'High'
+            };
+
+            const issueData = {
+                title: bugReport.title,
+                body: `## Beschreibung\n${bugReport.description}\n\n` +
+                    (bugReport.steps ? `## Schritte zum Reproduzieren\n${bugReport.steps}\n\n` : '') +
+                    (bugReport.expected ? `## Erwartetes Verhalten\n${bugReport.expected}\n\n` : '') +
+                    (bugReport.actual ? `## Tatsächliches Verhalten\n${bugReport.actual}\n\n` : '') +
+                    (bugReport.email ? `## Kontakt\nE-Mail: ${bugReport.email}\n` : '') +
+                    (bugReport.phone ? `Telefon: ${bugReport.phone}\n` : '') +
+                    `\n## Umgebung\n${bugReport.environment}`,
+                labels: [labelMapping[bugReport.label], priorityMapping[bugReport.priority]]
+            };
+
+            const response = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/issues`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `token ${token}`,
+                    'Accept': 'application/vnd.github.v3+json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(issueData)
+            });
+
+            if (!response.ok) {
+                throw new Error('Fehler beim Erstellen des GitHub Issues');
+            }
+
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Fehler beim Erstellen des GitHub Issues:', error);
+            throw error;
+        }
+    }
+
     function initializeBugReport() {
         const bugReportForm = document.getElementById('bugReportForm');
-        const bugReportsRef = collection(db, "Bugreports");
+        if (!bugReportForm) return;
+
+        const bugLabel = document.getElementById('bugLabel');
+        const bugFields = document.querySelectorAll('.bug-fields');
+
+        // Event Listener für die Änderung der Meldungsart
+        bugLabel.addEventListener('change', function() {
+            const isBug = this.value === 'fehler';
+            bugFields.forEach(field => {
+                field.style.display = isBug ? 'block' : 'none';
+                const input = field.querySelector('input, textarea');
+                if (input && !isBug) {
+                    input.value = ''; // Leere das Feld wenn ausgeblendet
+                }
+            });
+        });
 
         function getBrowserInfo() {
             const userAgent = navigator.userAgent;
@@ -1529,11 +1605,15 @@ document.addEventListener('DOMContentLoaded', () => {
             if (screenInfo) screenInfo.textContent = getScreenInfo();
         }
 
-        updateEnvironmentInfo();
-        window.addEventListener('resize', updateEnvironmentInfo);
-
-        bugReportForm.addEventListener('submit', async (e) => {
+        bugReportForm.addEventListener('submit', async function(e) {
             e.preventDefault();
+
+            const environment = {
+                browser: getBrowserInfo(),
+                browserVersion: getBrowserVersion(),
+                os: getOSInfo(),
+                screen: getScreenInfo()
+            };
 
             const bugReport = {
                 title: document.getElementById('bugTitle').value,
@@ -1541,28 +1621,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 steps: document.getElementById('bugSteps').value,
                 expected: document.getElementById('bugExpected').value,
                 actual: document.getElementById('bugActual').value,
-                email: document.getElementById('bugEmail').value || null,
-                phone: document.getElementById('bugPhone').value || null,
-                environment: {
-                    browser: getBrowserInfo(),
-                    os: getOSInfo(),
-                    screen: getScreenInfo()
-                },
-                status: "new",
-                priority: "medium",
-                createdAt: new Date(),
-                updatedAt: new Date()
+                email: document.getElementById('bugEmail').value,
+                phone: document.getElementById('bugPhone').value,
+                label: document.getElementById('bugLabel').value,
+                priority: document.getElementById('bugPriority').value,
+                environment: environment
             };
 
             try {
-                await addDoc(bugReportsRef, bugReport);
-                showToast('Bug Report erfolgreich eingereicht!', 'success');
+                await createGitHubIssue(bugReport);
+                showToast('Feedback wurde erfolgreich als GitHub Issue erstellt', 'success');
                 bugReportForm.reset();
+                bugFields.forEach(field => field.style.display = 'none'); // Verstecke die Bug-Felder nach dem Reset
             } catch (error) {
-                console.error("Fehler beim Speichern des Bug Reports:", error);
-                showToast('Fehler beim Speichern des Bug Reports', 'error');
+                showToast('Fehler beim Erstellen des Feedbacks: ' + error.message, 'error');
             }
         });
+
+        updateEnvironmentInfo();
     }
 
     function initializeBugReportsAdmin() {

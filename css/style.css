@@ -2646,3 +2646,43 @@ body {
     content: 'Hersteller: ';
     color: var(--text-tertiary);
 }
+
+.form-group-new select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: var(--input-bg);
+    color: var(--text-color);
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+}
+
+.form-group-new select:focus {
+    border-color: var(--primary-color);
+    outline: none;
+}
+
+.form-group-new select option {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+.dark-mode .form-group-new select {
+    background-color: var(--dark-input-bg);
+    border-color: none;
+    color: #fff;
+}
+
+.dark-mode .form-group-new select:focus {
+    border-color: var(--primary-color);
+}
+
+.dark-mode .form-group-new select option {
+    background-color: var(--dark-bg-color);
+    color: var(--primary-color);
+}
+
+.dark-mode .form-group-new select:hover {
+    border-color: var(--primary-color);
+}
