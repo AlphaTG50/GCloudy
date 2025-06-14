@@ -1287,17 +1287,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const linksList = document.getElementById('linksList');
         const servicesList = document.getElementById('localServicesListContainer');
 
-        
-        // Erstelle Suchvorschläge-Container
-        /*
-        const createSuggestionsContainer = (parent) => {
-            const container = document.createElement('div');
-            container.className = 'search-suggestions';
-            parent.appendChild(container);
-            return container;
-        };
-        */
-
         // Erstelle Suchvorschlag-Element
         const createSuggestionItem = (item, type, index) => {
             const div = document.createElement('div');
@@ -1329,8 +1318,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const showSuggestions = async (searchTerm, container, type, inputElement) => {
             if (!searchTerm) {
                 container.classList.remove('show');
-            return;
-        }
+                return;
+            }
 
             const items = type === 'link' ? await getWeblinksFromFirestore() : await getServicesFromFirestore();
             const filteredItems = items.filter(item => {
@@ -1340,7 +1329,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return title.includes(term) || description.includes(term);
             });
 
-        container.innerHTML = '';
+            container.innerHTML = '';
             
             if (filteredItems.length > 0) {
                 filteredItems.slice(0, 5).forEach((item, index) => {
@@ -1350,7 +1339,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 // Speichere die gefilterten Items für die Tastatursteuerung
                 container.filteredItems = filteredItems;
-                } else {
+            } else {
                 container.classList.remove('show');
             }
         };
@@ -1362,7 +1351,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             switch (e.key) {
                 case 'ArrowDown':
-            e.preventDefault();
+                    e.preventDefault();
                     if (currentIndex < items.length - 1) {
                         items[currentIndex]?.classList.remove('selected');
                         items[currentIndex + 1].classList.add('selected');
@@ -1404,7 +1393,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Initialisiere Suche für Links
         if (searchInput && linksList) {
-            const suggestionsContainer = createSuggestionsContainer(searchInput.parentElement);
+            const suggestionsContainer = document.createElement('div');
+            suggestionsContainer.className = 'search-suggestions';
+            searchInput.parentElement.appendChild(suggestionsContainer);
             
             searchInput.addEventListener('input', (e) => {
                 showSuggestions(e.target.value, suggestionsContainer, 'link', searchInput);
@@ -1440,7 +1431,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Initialisiere Suche für Dienste
         if (nasSearchInput && servicesList) {
-            const suggestionsContainer = createSuggestionsContainer(nasSearchInput.parentElement);
+            const suggestionsContainer = document.createElement('div');
+            suggestionsContainer.className = 'search-suggestions';
+            nasSearchInput.parentElement.appendChild(suggestionsContainer);
             
             nasSearchInput.addEventListener('input', (e) => {
                 showSuggestions(e.target.value, suggestionsContainer, 'service', nasSearchInput);
@@ -1485,12 +1478,24 @@ document.addEventListener('DOMContentLoaded', () => {
             const configDoc = await getDoc(configRef);
             
             if (!configDoc.exists()) {
+                console.error('GitHub Konfiguration nicht in Firestore gefunden');
                 throw new Error('GitHub Konfiguration nicht gefunden');
             }
             
-            return configDoc.data().token;
+            const token = configDoc.data().token;
+            if (!token) {
+                console.error('GitHub Token ist leer in der Firestore-Konfiguration');
+                throw new Error('GitHub Token ist nicht konfiguriert');
+            }
+            
+            return token;
         } catch (error) {
             console.error('Fehler beim Abrufen des GitHub Tokens:', error);
+            if (error.code === 'permission-denied') {
+                throw new Error('Keine Berechtigung für den Zugriff auf die GitHub-Konfiguration');
+            } else if (error.code === 'unavailable') {
+                throw new Error('Firestore-Datenbank ist nicht erreichbar');
+            }
             throw error;
         }
     }
@@ -1544,7 +1549,22 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (!response.ok) {
-                throw new Error('Fehler beim Erstellen des GitHub Issues');
+                const errorData = await response.json().catch(() => ({}));
+                console.error('GitHub API Fehler:', {
+                    status: response.status,
+                    statusText: response.statusText,
+                    errorData
+                });
+                
+                if (response.status === 401) {
+                    throw new Error('GitHub Token ist ungültig oder abgelaufen');
+                } else if (response.status === 403) {
+                    throw new Error('Keine Berechtigung für das Repository');
+                } else if (response.status === 404) {
+                    throw new Error('Repository nicht gefunden');
+                } else {
+                    throw new Error(`GitHub API Fehler: ${response.status} ${response.statusText}`);
+                }
             }
 
             const data = await response.json();
