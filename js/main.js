@@ -1665,6 +1665,18 @@ document.addEventListener('DOMContentLoaded', () => {
         bugReportForm.addEventListener('submit', async function(e) {
             e.preventDefault();
 
+            const lastFeedbackTime = localStorage.getItem('lastFeedbackSubmitTime');
+            const currentTime = new Date().getTime();
+            const COOLDOWN_MILLIS = 10 * 60 * 1000; // 10 Minuten in Millisekunden
+
+            if (lastFeedbackTime && (currentTime - lastFeedbackTime < COOLDOWN_MILLIS)) {
+                const timeLeftSeconds = Math.ceil((COOLDOWN_MILLIS - (currentTime - lastFeedbackTime)) / 1000);
+                const minutesLeft = Math.floor(timeLeftSeconds / 60);
+                const secondsLeft = timeLeftSeconds % 60;
+                showToast(`Bitte warten Sie ${minutesLeft} Minuten und ${secondsLeft} Sekunden, bevor Sie erneut Feedback senden.`, 'warning');
+                return;
+            }
+
             const environment = {
                 browser: getBrowserInfo(),
                 browserVersion: getBrowserVersion(),
@@ -1687,6 +1699,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             try {
                 await createGitHubIssue(bugReport);
+                localStorage.setItem('lastFeedbackSubmitTime', currentTime); // Zeitstempel speichern
                 showToast('Feedback wurde erfolgreich als GitHub Issue erstellt', 'success');
                 bugReportForm.reset();
                 bugFields.forEach(field => field.style.display = 'none'); // Verstecke die Bug-Felder nach dem Reset
