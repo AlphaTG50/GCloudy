@@ -1523,7 +1523,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     (bugReport.actual ? `## Tatsächliches Verhalten\n${bugReport.actual}\n\n` : '') +
                     (bugReport.email ? `## Kontakt\nE-Mail: ${bugReport.email}\n` : '') +
                     (bugReport.phone ? `Telefon: ${bugReport.phone}\n` : '') +
-                    `\n## Umgebung\n${bugReport.environment}`,
+                    `\n## Umgebung\n` +
+                    `- Browser: ${bugReport.environment.browser} ${bugReport.environment.browserVersion}\n` +
+                    `- Betriebssystem: ${bugReport.environment.os}\n` +
+                    `- Bildschirmauflösung: ${bugReport.environment.screen}`,
                 labels: [labelMapping[bugReport.label], priorityMapping[bugReport.priority]]
             };
 
