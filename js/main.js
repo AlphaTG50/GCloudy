@@ -1287,13 +1287,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const linksList = document.getElementById('linksList');
         const servicesList = document.getElementById('localServicesListContainer');
 
+        
         // Erstelle Suchvorschläge-Container
+        /*
         const createSuggestionsContainer = (parent) => {
             const container = document.createElement('div');
             container.className = 'search-suggestions';
             parent.appendChild(container);
             return container;
         };
+        */
 
         // Erstelle Suchvorschlag-Element
         const createSuggestionItem = (item, type, index) => {
